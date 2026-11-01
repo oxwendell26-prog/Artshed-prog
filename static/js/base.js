@@ -83,6 +83,54 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Mobile navigation menu
+    var navigationToggle = document.getElementById("primary-navigation-toggle");
+    var navigationPanel = document.getElementById("primary-navigation-panel");
+
+    if (navigationToggle && navigationPanel) {
+        var closeNavigation = function () {
+            navigationPanel.classList.remove("is-open");
+            navigationToggle.setAttribute("aria-expanded", "false");
+            navigationToggle.setAttribute("aria-label", "Open navigation menu");
+            navigationToggle.querySelector("[aria-hidden='true']").textContent = "☰";
+            navigationToggle.querySelector(".primary-navigation-toggle-label").textContent = "Menu";
+        };
+
+        navigationToggle.addEventListener("click", function () {
+            var isOpen = navigationToggle.getAttribute("aria-expanded") === "true";
+            if (isOpen) {
+                closeNavigation();
+                return;
+            }
+            navigationPanel.classList.add("is-open");
+            navigationToggle.setAttribute("aria-expanded", "true");
+            navigationToggle.setAttribute("aria-label", "Close navigation menu");
+            navigationToggle.querySelector("[aria-hidden='true']").textContent = "×";
+            navigationToggle.querySelector(".primary-navigation-toggle-label").textContent = "Close";
+        });
+
+        navigationPanel.addEventListener("click", function (event) {
+            if (event.target.closest("a")) closeNavigation();
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && navigationToggle.getAttribute("aria-expanded") === "true") {
+                closeNavigation();
+                navigationToggle.focus();
+            }
+        });
+
+        document.addEventListener("click", function (event) {
+            if (
+                navigationToggle.getAttribute("aria-expanded") === "true" &&
+                !navigationToggle.contains(event.target) &&
+                !navigationPanel.contains(event.target)
+            ) {
+                closeNavigation();
+            }
+        });
+    }
+
     // I-trigger ang paunang scroll event para maayos ang progress bar sa pag-load
     window.dispatchEvent(new Event("scroll"));
 
