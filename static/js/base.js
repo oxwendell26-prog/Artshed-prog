@@ -86,14 +86,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // Mobile navigation menu
     var navigationToggle = document.getElementById("primary-navigation-toggle");
     var navigationPanel = document.getElementById("primary-navigation-panel");
+    var navigationBackdrop = document.getElementById("primary-navigation-backdrop");
+    var navigationClose = document.getElementById("primary-navigation-close");
 
-    if (navigationToggle && navigationPanel) {
+    if (navigationToggle && navigationPanel && navigationBackdrop && navigationClose) {
         var closeNavigation = function () {
             navigationPanel.classList.remove("is-open");
+            navigationBackdrop.classList.remove("is-open");
             navigationToggle.setAttribute("aria-expanded", "false");
             navigationToggle.setAttribute("aria-label", "Open navigation menu");
+            navigationPanel.setAttribute("aria-hidden", "true");
             navigationToggle.querySelector("[aria-hidden='true']").textContent = "☰";
             navigationToggle.querySelector(".primary-navigation-toggle-label").textContent = "Menu";
+            document.body.style.overflow = "";
         };
 
         navigationToggle.addEventListener("click", function () {
@@ -103,14 +108,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
             navigationPanel.classList.add("is-open");
+            navigationBackdrop.classList.add("is-open");
             navigationToggle.setAttribute("aria-expanded", "true");
             navigationToggle.setAttribute("aria-label", "Close navigation menu");
+            navigationPanel.setAttribute("aria-hidden", "false");
             navigationToggle.querySelector("[aria-hidden='true']").textContent = "×";
             navigationToggle.querySelector(".primary-navigation-toggle-label").textContent = "Close";
+            document.body.style.overflow = "hidden";
+            navigationClose.focus();
+        });
+
+        navigationClose.addEventListener("click", function () {
+            closeNavigation();
+            navigationToggle.focus();
+        });
+
+        navigationBackdrop.addEventListener("click", function () {
+            closeNavigation();
+            navigationToggle.focus();
         });
 
         navigationPanel.addEventListener("click", function (event) {
-            if (event.target.closest("a")) closeNavigation();
+            if (event.target.closest("a")) {
+                closeNavigation();
+                navigationToggle.focus();
+            }
         });
 
         document.addEventListener("keydown", function (event) {

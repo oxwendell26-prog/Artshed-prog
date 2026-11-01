@@ -4,8 +4,7 @@
 
 /* Main Container */
 .my-art-container {
-    max-width: 72rem;
-    /* 1152px / max-w-6xl */
+    max-width: none;
     margin-left: auto;
     margin-right: auto;
     padding-left: 1rem;

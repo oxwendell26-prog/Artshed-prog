@@ -4,13 +4,12 @@
 
 /* Main Section Container - Nagbibigay ng padding at nagpapanatili ng gitnang posisyon ng buong layout */
 .account-container {
-    max-width: 80rem;
-    /* 1280px maximum na lapad */
+    max-width: none;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1.25rem;
+    padding-left: 1rem;
     /* 20px space sa kaliwa */
-    padding-right: 1.25rem;
+    padding-right: 1rem;
     /* 20px space sa kanan */
     padding-top: 2.5rem;
     /* 40px space sa itaas */
@@ -121,8 +120,7 @@
 }
 
 .account-panel-max-2xl {
-    max-width: 42rem;
-    /* Likas na limitasyon sa lapad para sa mga forms o cards (672px) */
+    max-width: none;
 }
 
 /* ======================================================
@@ -153,9 +151,8 @@
 /* Para sa katamtamang laki ng screen (Tablets) */
 @media (min-width: 640px) {
     .account-container {
-        padding-left: 2rem;
-        /* 32px */
-        padding-right: 2rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
         padding-top: 3.5rem;
         /* 56px */
         padding-bottom: 3.5rem;

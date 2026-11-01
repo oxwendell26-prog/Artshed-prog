@@ -4,6 +4,23 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
+    const layoutGrid = document.querySelector('.admin-layout-grid');
+    const sidebarToggle = document.getElementById('admin-sidebar-toggle');
+    const sidebar = document.getElementById('admin-sidebar');
+    const toggleLabel = sidebarToggle && sidebarToggle.querySelector('.admin-sidebar-toggle-label');
+
+    if (layoutGrid && sidebarToggle && sidebar && toggleLabel) {
+        sidebarToggle.addEventListener('click', function () {
+            const isExpanded = sidebarToggle.getAttribute('aria-expanded') === 'true';
+            const shouldExpand = !isExpanded;
+
+            layoutGrid.classList.toggle('sidebar-hidden', !shouldExpand);
+            sidebarToggle.setAttribute('aria-expanded', String(shouldExpand));
+            sidebar.setAttribute('aria-hidden', String(!shouldExpand));
+            toggleLabel.textContent = shouldExpand ? 'Hide admin menu' : 'Show admin menu';
+        });
+    }
+
     const navContainer = document.querySelector('.admin-nav');
     const activeLink = document.querySelector('.admin-nav-link.active');
 

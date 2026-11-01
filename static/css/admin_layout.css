@@ -4,13 +4,12 @@
 
 /* Main Section Container - Nagbibigay ng espasyo at nagpapanatili ng gitnang posisyon */
 .admin-layout-container {
-    max-width: 80rem;
-    /* 1280px maximum width */
+    max-width: none;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 1.25rem;
+    padding-left: 1rem;
     /* 20px */
-    padding-right: 1.25rem;
+    padding-right: 1rem;
     padding-top: 2.5rem;
     /* 40px */
     padding-bottom: 3.5rem;
@@ -19,9 +18,8 @@
 
 @media (min-width: 640px) {
     .admin-layout-container {
-        padding-left: 2rem;
-        /* 32px sa tablet/desktop */
-        padding-right: 2rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
         padding-top: 3.5rem;
         /* 56px */
         padding-bottom: 3.5rem;
@@ -35,6 +33,41 @@
     /* 32px espasyo sa pagitan ng sidebar at content */
     grid-template-columns: 1fr;
     /* Default sa mobile (pababa) */
+}
+
+.admin-layout-grid.sidebar-hidden {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.admin-layout-grid.sidebar-hidden .admin-sidebar {
+    display: none;
+}
+
+.admin-sidebar-toggle {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.5rem;
+    background: rgba(18, 19, 24, 0.85);
+    padding: 0.5rem 0.875rem;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-sidebar-toggle:hover {
+    border-color: rgba(172, 178, 181, 0.55);
+    background: rgba(30, 32, 40, 0.95);
+}
+
+.admin-sidebar-toggle-icon {
+    font-size: 1.125rem;
+    line-height: 1;
 }
 
 @media (min-width: 1024px) {
