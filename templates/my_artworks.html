@@ -6,7 +6,7 @@
 {# Pag-link sa ating bagong hiwalay na CSS file #}
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/my_artworks.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/my_artworks.css') }}?v=2">
 {% endblock %}
 
 {% block title %}My Artworks Gallery{% endblock %}

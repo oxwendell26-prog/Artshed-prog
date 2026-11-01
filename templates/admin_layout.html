@@ -6,17 +6,23 @@
 {# Pag-link sa ating hiwalay na CSS file para sa admin layout #}
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_layout.css') }}?v=2">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_layout.css') }}?v=4">
 {% endblock %}
 
 {% block content %}
 <section class="admin-layout-container">
+  <button id="admin-sidebar-toggle" type="button" class="admin-sidebar-toggle"
+    aria-expanded="true" aria-controls="admin-sidebar">
+    <span class="admin-sidebar-toggle-icon" aria-hidden="true">☰</span>
+    <span class="admin-sidebar-toggle-label">Hide admin menu</span>
+  </button>
+
   <div class="admin-layout-grid">
 
     {# ========================================== #}
     {# 2. SIDEBAR ADMIN NAVIGATION MENU #}
     {# ========================================== #}
-    <aside aria-label="Admin menu" class="admin-sidebar">
+    <aside id="admin-sidebar" aria-label="Admin menu" class="admin-sidebar">
 
       <p class="admin-sidebar-title">Administration</p>
 
@@ -64,5 +70,5 @@
 
 {% block scripts %}
 {{ super() }}
-<script src="{{ url_for('static', filename='js/admin_layout.js') }}"></script>
+<script src="{{ url_for('static', filename='js/admin_layout.js') }}?v=2"></script>
 {% endblock %}

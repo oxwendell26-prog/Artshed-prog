@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/macros.css') }}?v=3">
 
   {# Pag-link sa Hiwalay na Global CSS File (Gamit ang v=5 para ma-refresh ang cache) #}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}?v=7">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}?v=11">
 
   {# Karagdagang head block para sa iba pang pahina #}
   {% block head %}{% endblock %}
@@ -60,7 +60,7 @@
   {# 3. HEADER AT NAVIGATION BAR #}
   {# ========================================== #}
   <header class="sticky top-0 z-30 border-b border-white/10 bg-neutral-950/95 backdrop-blur">
-    <div class="mx-auto max-w-7xl px-5 py-3 sm:px-8">
+    <div class="mx-auto w-full max-w-none px-4 py-3 sm:px-5 lg:px-6">
 
       {# A. Logo at History Buttons #}
       <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
@@ -250,85 +250,75 @@
       {# C. Main Navigation Links (na may HOVER MEGA DROPDOWN) at Search Bar #}
       <div class="primary-navigation-shell mt-3 border-t border-white/10 pt-3">
         <div class="primary-navigation-top">
-          <a href="{{ url_for('home') }}" class="nav-btn-silver">
-            Home
-          </a>
           <button id="primary-navigation-toggle" type="button" aria-expanded="false"
             aria-controls="primary-navigation-panel" aria-label="Open navigation menu"
             class="primary-navigation-toggle">
             <span aria-hidden="true">☰</span>
             <span class="primary-navigation-toggle-label">Menu</span>
           </button>
+          <a href="{{ url_for('home') }}" class="nav-btn-silver">
+            Home
+          </a>
         </div>
+      </div>
 
-        <div id="primary-navigation-panel" class="primary-navigation-panel">
-          <nav aria-label="Browse" class="primary-navigation-links flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-medium">
-          <!-- HOVER MEGA DROPDOWN FOR ARTWORKS -->
-          <div class="group relative py-1">
-            <a href="{{ url_for('artworks') }}" class="nav-btn-silver flex items-center gap-1.5 select-none">
-              Artworks
-              <svg class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </div>
+  </header>
+
+  <div id="primary-navigation-backdrop" class="primary-navigation-backdrop" aria-hidden="true"></div>
+  <aside id="primary-navigation-panel" class="primary-navigation-panel" aria-label="Main navigation"
+    aria-hidden="true">
+    <div class="primary-navigation-drawer-header">
+      <span class="font-display text-lg text-white">Navigation</span>
+      <button id="primary-navigation-close" type="button" class="primary-navigation-close"
+        aria-label="Close navigation menu">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+
+    <nav aria-label="Browse" class="primary-navigation-links text-sm font-medium">
+          <details class="navigation-artworks-dropdown">
+            <summary class="navigation-artworks-toggle">
+              <span>Artworks</span>
+              <svg class="h-4 w-4 transition-transform" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6" />
               </svg>
-            </a>
-
-            <div
-              class="absolute left-0 top-full z-50 mt-1 w-[min(680px,calc(100vw-8rem))] rounded-xl bg-neutral-900/95 p-6 shadow-2xl ring-1 ring-white/10 backdrop-blur-xl opacity-0 invisible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 group-hover:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-focus-within:visible">
-              <div class="grid max-h-96 grid-cols-1 gap-6 overflow-y-auto sm:grid-cols-3">
-
-                <!-- Column 1: DYNAMIC STYLES -->
+            </summary>
+            <div class="navigation-artworks-content">
+              <a href="{{ url_for('artworks') }}" class="navigation-artworks-all">Browse all artworks</a>
+              <div class="navigation-artworks-category">
+                <p>Styles</p>
                 <div>
-                  <h4 class="text-xs font-bold uppercase tracking-wider text-[#acb2b5] mb-3">Styles</h4>
-                  <ul class="space-y-2">
-                    {% for st in dynamic_styles %}
-                    <li><a href="{{ url_for('artworks', style=st|lower) }}"
-                        class="text-sm text-neutral-300 hover:text-white transition-colors">{{ st }}</a></li>
-                    {% else %}
-                    <li class="text-xs text-neutral-500 italic">No styles yet</li>
-                    {% endfor %}
-                  </ul>
+                  {% for st in dynamic_styles %}
+                  <a href="{{ url_for('artworks', style=st|lower) }}">{{ st }}</a>
+                  {% else %}
+                  <span>No styles yet</span>
+                  {% endfor %}
                 </div>
-
-                <!-- Column 2: DYNAMIC SUBJECTS -->
-                <div>
-                  <h4 class="text-xs font-bold uppercase tracking-wider text-[#acb2b5] mb-3">Subjects</h4>
-                  <ul class="space-y-2">
-                    {% for sub in dynamic_subjects %}
-                    <li><a href="{{ url_for('artworks', subject=sub|lower) }}"
-                        class="text-sm text-neutral-300 hover:text-white transition-colors">{{ sub }}</a></li>
-                    {% else %}
-                    <li class="text-xs text-neutral-500 italic">No subjects yet</li>
-                    {% endfor %}
-                  </ul>
-                </div>
-
-                <!-- Column 3: DYNAMIC MEDIUMS -->
-                <div>
-                  <h4 class="text-xs font-bold uppercase tracking-wider text-[#acb2b5] mb-3">Mediums</h4>
-                  <ul class="space-y-2">
-                    {% for med in dynamic_mediums %}
-                    <li><a href="{{ url_for('artworks', medium=med|lower) }}"
-                        class="text-sm text-neutral-300 hover:text-white transition-colors">{{ med }}</a></li>
-                    {% else %}
-                    <li class="text-xs text-neutral-500 italic">No mediums yet</li>
-                    {% endfor %}
-                  </ul>
-                </div>
-
               </div>
-
-              <!-- Bottom Link para sa Lahat ng Artworks -->
-              <div
-                class="mt-5 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-3 sm:flex-row sm:items-center">
-                <span class="text-xs text-neutral-400">Finding a particular artwork?</span>
-                <a href="{{ url_for('artworks') }}"
-                  class="text-xs font-semibold text-neutral-950 bg-[#acb2b5] px-3 py-1.5 rounded hover:bg-[#c9ced1] transition-colors">
-                  Browse All Artworks ✨
-                </a>
+              <div class="navigation-artworks-category">
+                <p>Subjects</p>
+                <div>
+                  {% for sub in dynamic_subjects %}
+                  <a href="{{ url_for('artworks', subject=sub|lower) }}">{{ sub }}</a>
+                  {% else %}
+                  <span>No subjects yet</span>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="navigation-artworks-category">
+                <p>Mediums</p>
+                <div>
+                  {% for med in dynamic_mediums %}
+                  <a href="{{ url_for('artworks', medium=med|lower) }}">{{ med }}</a>
+                  {% else %}
+                  <span>No mediums yet</span>
+                  {% endfor %}
+                </div>
               </div>
             </div>
-          </div>
+          </details>
 
           <a href="{{ url_for('artists') }}" class="nav-btn-silver">
             Artists
@@ -339,40 +329,32 @@
           <a href="{{ url_for('track_order') }}" class="nav-btn-silver">
             Track order
           </a>
-          </nav>
+    </nav>
 
-          {# Search Bar Form #}
-          <form action="{{ url_for('search') }}" method="get" role="search" class="primary-navigation-search w-full sm:w-64 sm:shrink-0">
-            <label for="site-search" class="sr-only">
-              Search paintings and artists
-            </label>
-            <div class="relative">
-              <input id="site-search" name="q" type="search" maxlength="100"
-                value="{{ request.args.get('q', '') if request.endpoint == 'search' else '' }}"
-                placeholder="Paintings or artists" class="search-input-silver" />
-              <button type="submit" aria-label="Search"
-                class="absolute inset-y-0 right-0 inline-flex w-9 items-center justify-center text-neutral-400 hover:text-white">
-                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
-                  aria-hidden="true">
-                  <circle cx="10.8" cy="10.8" r="6.8" />
-                  <path stroke-linecap="round" d="m16 16 5 5" />
-                </svg>
-              </button>
-            </div>
-          </form>
-        </div>
-
+    <form action="{{ url_for('search') }}" method="get" role="search" class="primary-navigation-search">
+      <label for="site-search" class="sr-only">Search paintings and artists</label>
+      <div class="relative">
+        <input id="site-search" name="q" type="search" maxlength="100"
+          value="{{ request.args.get('q', '') if request.endpoint == 'search' else '' }}"
+          placeholder="Paintings or artists" class="search-input-silver" />
+        <button type="submit" aria-label="Search"
+          class="absolute inset-y-0 right-0 inline-flex w-9 items-center justify-center text-neutral-400 hover:text-white">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+            aria-hidden="true">
+            <circle cx="10.8" cy="10.8" r="6.8" />
+            <path stroke-linecap="round" d="m16 16 5 5" />
+          </svg>
+        </button>
       </div>
-
-    </div>
-  </header>
+    </form>
+  </aside>
 
 
   {# ========================================== #}
   {# 4. FLASH MESSAGES SECTION #}
   {# ========================================== #}
   {% with messages = get_flashed_messages(with_categories=true) %}
-  <div id="flash-messages" class="mx-auto w-full max-w-7xl space-y-2 px-5 pt-6 sm:px-8 {{ 'hidden' if not messages }}"
+  <div id="flash-messages" class="mx-auto w-full max-w-none space-y-2 px-4 pt-6 sm:px-5 lg:px-6 {{ 'hidden' if not messages }}"
     role="status" aria-live="polite">
     {% for cat, msg in messages %}
     <p
@@ -396,7 +378,7 @@
   {# 6. FOOTER SECTION #}
   {# ========================================== #}
   <footer class="border-t border-white/10">
-    <p class="mx-auto max-w-7xl px-5 py-6 text-sm text-neutral-400 sm:px-8">
+    <p class="mx-auto w-full max-w-none px-4 py-6 text-sm text-neutral-400 sm:px-5 lg:px-6">
       Kidapawan City Visual Artists.
     </p>
   </footer>
@@ -415,7 +397,7 @@
   {# ========================================== #}
   {# 8. JAVASCRIPT SCRIPTS AT INTERACTIVITY #}
   {# ========================================== #}
-  <script src="{{ url_for('static', filename='js/base.js') }}?v=2"></script>
+  <script src="{{ url_for('static', filename='js/base.js') }}?v=4"></script>
   {% block scripts %}{% endblock %}
 
 </body>
