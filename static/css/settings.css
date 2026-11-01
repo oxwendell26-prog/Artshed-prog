@@ -1,0 +1,135 @@
+.settings-page {
+    width: 100%;
+    max-width: 28rem;
+    margin-inline: auto;
+    display: grid;
+    gap: 1.5rem;
+    padding: 2.5rem 1.25rem 4rem;
+}
+
+.settings-header {
+    text-align: left;
+}
+
+.settings-header h1 {
+    margin-top: 0;
+    font-size: 1.875rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: #ffffff;
+}
+
+.settings-header>p {
+    margin-top: 0.5rem;
+    color: #a3a3a3;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.settings-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    background: #171717;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.2s ease;
+}
+
+.settings-card:focus-within {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(172, 178, 181, 0.4);
+}
+
+.settings-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.settings-card-heading h2 {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.settings-card-heading p {
+    margin-top: 0.25rem;
+    color: #a3a3a3;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+.settings-card-heading p span {
+    color: #e5e5e5;
+    overflow-wrap: anywhere;
+}
+
+.settings-step {
+    display: none;
+}
+
+.settings-fields {
+    display: grid;
+    gap: 1rem;
+    width: 100%;
+}
+
+.settings-fields .macro-field-input {
+    min-height: 2.625rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.settings-password-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.settings-submit {
+    display: inline-flex;
+    min-height: 2.75rem;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 0.375rem;
+    background: #acb2b5;
+    padding: 0.75rem 1.5rem;
+    color: #0a0a0a;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.settings-submit:hover {
+    background: #e0f2fe;
+}
+
+.settings-submit:active {
+    transform: scale(0.98);
+}
+
+@media (min-width: 640px) {
+    .settings-page {
+        padding-top: 4rem;
+        padding-bottom: 6rem;
+    }
+
+    .settings-card {
+        padding: 1.75rem;
+    }
+
+    .settings-password-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 639px) {
+    .settings-card {
+        padding: 1.25rem;
+    }
+}
