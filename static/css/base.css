@@ -213,3 +213,60 @@ button:focus-visible {
         transition: none;
     }
 }
+
+img,
+video {
+    max-width: 100%;
+}
+
+div[class*="table-container"],
+div[class*="table-wrapper"] {
+    overscroll-behavior-inline: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(172, 178, 181, 0.55) rgba(255, 255, 255, 0.06);
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 639px) {
+    body {
+        background-attachment: scroll;
+    }
+
+    header > .mx-auto.max-w-7xl {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .nav-btn-silver {
+        min-height: 2.75rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        font-size: 0.8125rem;
+    }
+
+    .btn-silver,
+    .dropdown-btn-silver {
+        min-height: 2.75rem;
+        padding-left: 0.875rem;
+        padding-right: 0.875rem;
+    }
+
+    nav[aria-label="Browse"] > .group > div.absolute {
+        left: 50%;
+        translate: -50% 0;
+        width: min(680px, calc(100vw - 2rem));
+        max-width: calc(100vw - 2rem);
+        padding: 1rem;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+
+    .back-to-top-btn {
+        right: 0.75rem;
+        bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    }
+}

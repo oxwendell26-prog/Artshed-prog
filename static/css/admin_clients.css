@@ -44,6 +44,8 @@
 .admin-clients-search-form {
     display: flex;
     gap: 0.5rem;
+    width: 100%;
+    min-width: 0;
 }
 
 /* Search Input Field */
@@ -100,6 +102,7 @@
 
 .admin-clients-table {
     width: 100%;
+    min-width: 42rem;
     text-align: left;
     font-size: 0.875rem;
     color: #d4d4d4;
@@ -161,6 +164,7 @@
     font-size: 0.75rem;
     color: #a3a3a3;
     margin-top: 0.125rem;
+    overflow-wrap: anywhere;
 }
 
 .admin-client-date {

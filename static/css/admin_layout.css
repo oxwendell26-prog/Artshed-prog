@@ -68,6 +68,10 @@
     overflow-x: auto;
     /* Horizontal scroll para sa maliit na screen */
     padding-bottom: 0.25rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(172, 178, 181, 0.55) rgba(255, 255, 255, 0.06);
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
 }
 
 @media (min-width: 1024px) {
@@ -96,6 +100,7 @@
     color: #d4d4d4;
     /* Light gray text */
     transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    scroll-snap-align: start;
 }
 
 /* Hover State - Kapag tinapatan ng mouse ang hindi aktibong link */
@@ -116,4 +121,10 @@
 .admin-panel-area {
     min-width: 0;
     width: 100%;
+}
+
+@media (max-width: 639px) {
+    .admin-nav-link {
+        min-height: 2.75rem;
+    }
 }

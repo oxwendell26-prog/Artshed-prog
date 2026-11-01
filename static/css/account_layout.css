@@ -40,6 +40,10 @@
     overflow-x: auto;
     /* Pinapayagan ang pahalang na scroll kapag pumasok sa mobile view */
     padding-bottom: 0.25rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(172, 178, 181, 0.55) rgba(255, 255, 255, 0.06);
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Divider Line sa pagitan ng mga menu section */
@@ -74,6 +78,7 @@
     color: #d4d4d4;
     /* Light gray na kulay ng teksto */
     transition: background-color 0.2s ease, color 0.2s ease;
+    scroll-snap-align: start;
 }
 
 /* Hover State - Kapag itinapat ang cursor sa hindi aktibong link */
@@ -154,5 +159,11 @@
         padding-top: 3.5rem;
         /* 56px */
         padding-bottom: 3.5rem;
+    }
+}
+
+@media (max-width: 639px) {
+    .account-nav-link {
+        min-height: 2.75rem;
     }
 }
