@@ -1,0 +1,303 @@
+/* ======================================================
+   ARTIST ORDERS PAGE STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Main Panel Container o Wrapper */
+.orders-section {
+    max-width: 56rem;
+    /* max-w-4xl */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Pamagat ng Pahina */
+.orders-page-title {
+    font-family: var(--font-display, serif);
+    font-size: 1.875rem;
+    /* 30px sa mobile */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+@media (min-width: 640px) {
+    .orders-page-title {
+        font-size: 2.25rem;
+        /* 36px sa tablet/desktop */
+    }
+}
+
+/* Subtitle at Deskripsyon */
+.orders-page-subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+    /* Neutral gray */
+    line-height: 1.5;
+}
+
+/* Listahan ng mga Orders (UL List) */
+.orders-list {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    /* space-y-5 */
+}
+
+/* Bawat Card ng Order (Article) */
+.order-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    /* 24px */
+    border-radius: 0.5rem;
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 1.25rem;
+    /* 20px */
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.order-card-pending {
+    box-shadow: 0 0 0 1px rgba(233, 180, 32, 0.5);
+    /* Brass border para sa bagong order */
+}
+
+/* Canvas o Larawan sa Card */
+.order-card-canvas {
+    width: 6rem;
+    /* w-24 */
+    flex-shrink: 0;
+    background-color: #0a0a0a;
+    /* Neutral 950 */
+    padding: 0.375rem;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    align-self: flex-start;
+}
+
+/* Nilalaman ng Order sa KANAN */
+.order-card-body {
+    min-width: 0;
+    flex: 1;
+}
+
+/* Header ng Card (Pamagat at Badge) */
+.order-card-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.order-card-title {
+    font-family: var(--font-display, serif);
+    font-size: 1.25rem;
+    /* 20px */
+    color: #ffffff;
+}
+
+/* Status Badges */
+.order-badge-new {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background-color: rgba(233, 180, 32, 0.15);
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #acb2b5;
+    box-shadow: inset 0 0 0 1px rgba(233, 180, 32, 0.4);
+}
+
+.order-badge-warning {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background-color: rgba(251, 191, 36, 0.15);
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #fde68a;
+    box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.3);
+}
+
+.order-badge-escrow {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background-color: rgba(59, 130, 246, 0.15);
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #93c5fd;
+    box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.3);
+}
+
+.order-badge-success {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background-color: rgba(52, 211, 153, 0.15);
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6ee7b7;
+    box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.3);
+}
+
+.order-badge-muted {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #a3a3a3;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Financial Breakdown Grid (Presyo, Komisyon, at Payout) */
+.order-financial-grid {
+    margin-top: 0.75rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.5rem;
+    border-radius: 0.375rem;
+    background-color: rgba(10, 10, 10, 0.6);
+    padding: 0.75rem;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    font-size: 0.75rem;
+}
+
+@media (min-width: 640px) {
+    .order-financial-grid {
+        font-size: 0.875rem;
+    }
+}
+
+.order-fin-label {
+    display: block;
+    color: #737373;
+    /* Neutral 500 */
+}
+
+.order-fin-val-white {
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.order-fin-val-amber {
+    font-weight: bold;
+    color: #fbbf24;
+    /* Amber */
+}
+
+.order-fin-val-emerald {
+    font-weight: bold;
+    color: #34d399;
+    /* Emerald */
+}
+
+/* Petsa at Order Number */
+.order-meta-info {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #a3a3a3;
+}
+
+/* Buyer Info Definition List (DL) */
+.order-buyer-dl {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    row-gap: 0.25rem;
+    font-size: 0.8125rem;
+    color: #d4d4d4;
+}
+
+.order-buyer-dt {
+    color: #a3a3a3;
+}
+
+.order-buyer-link {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s ease;
+}
+
+.order-buyer-link:hover {
+    color: #ffffff;
+}
+
+.order-break-all {
+    word-break: break-all;
+}
+
+/* Escrow Notice Box sa loob ng Order */
+.order-escrow-notice {
+    margin-top: 1rem;
+    border-radius: 0.25rem;
+    background-color: rgba(59, 130, 246, 0.1);
+    padding: 0.75rem;
+    box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.2);
+    font-size: 0.75rem;
+    color: #bfdbfe;
+    line-height: 1.4;
+}
+
+/* Action Buttons Row */
+.order-actions-row {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.order-btn-primary {
+    border-radius: 0.25rem;
+    background-color: #acb2b5;
+    /* Brass */
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.order-btn-primary:hover {
+    background-color: #fde68a;
+    /* Amber-200 */
+}
+
+.order-btn-danger {
+    border-radius: 0.25rem;
+    background: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #fca5a5;
+    /* Red light */
+    box-shadow: inset 0 0 0 1px rgba(248, 113, 113, 0.3);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.order-btn-danger:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Empty State Message */
+.orders-empty-box {
+    margin-top: 2.5rem;
+    border-radius: 0.5rem;
+    background-color: #171717;
+    padding: 1.5rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    line-height: 1.5;
+}

@@ -1,0 +1,413 @@
+/* ==========================================
+   INDEX / HOME PAGE STYLES
+   ========================================== */
+
+/* 1. HERO SECTION */
+.hero-section {
+    position: relative;
+    padding: 4rem 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero-container {
+    max-width: 56rem;
+    margin: 0 auto;
+}
+
+.hero-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #acb2b5;
+    margin-bottom: 0.75rem;
+}
+
+.hero-title {
+    font-family: inherit;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+    .hero-title {
+        font-size: 3.5rem;
+    }
+}
+
+.hero-subtitle {
+    font-size: 1rem;
+    color: #a3a3a3;
+    margin-bottom: 2rem;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-cta-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.hero-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: #ffffff;
+    padding: 0.75rem 1.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    transition: all 0.25s ease;
+}
+
+.hero-btn-primary:hover {
+    background-color: #acb2b5;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+.hero-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.75rem 1.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+    transition: all 0.25s ease;
+}
+
+.hero-btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+
+/* 2. GENERAL HOME SECTIONS */
+.home-section {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 3.5rem 1.25rem;
+}
+
+.home-section-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+    .home-section-header {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+}
+
+.home-section-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #acb2b5;
+    margin-bottom: 0.25rem;
+}
+
+.home-section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.home-section-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #acb2b5;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.home-section-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+
+/* ==========================================
+   3. FEATURED ARTWORKS GRID & MAGANDANG HOVER
+   ========================================== */
+.home-artworks-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.75rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+@media (min-width: 640px) {
+    .home-artworks-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .home-artworks-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+/* ARTWORK CARD CONTAINER */
+.artwork-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 0.875rem;
+    background-color: #121212;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+
+    /* Smooth Transition para sa lahat ng hover effects */
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+/* MAGANDANG HOVER EFFECT SA CARD */
+.artwork-card:hover {
+    /* 1. Bahagyang pag-angat ng card */
+    transform: translateY(-8px);
+
+    /* 2. Soft Sky/Silver Glow Effect at Ambient Shadow */
+    border-color: rgba(172, 178, 181, 0.5);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.7),
+        0 0 20px rgba(172, 178, 181, 0.15);
+}
+
+.artwork-card-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* IMAGE WRAPPER AT SMOOTH ZOOM EFFECT */
+.artwork-card-image-wrap {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background-color: #0d0d0d;
+}
+
+.artwork-card-image-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.5s ease;
+}
+
+.artwork-card-image-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ZOOM AT BRIGHTNESS SA HOVER */
+.artwork-card:hover .artwork-card-image-inner img,
+.artwork-card:hover .artwork-card-image-inner {
+    transform: scale(1.08);
+    /* Halos 8% na zoom-in */
+    filter: brightness(1.08);
+    /* Bahagyang pagliwanag */
+}
+
+/* ARTWORK CARD BODY AT TEXT ACCENTS */
+.artwork-card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+    padding: 1rem;
+    background: linear-gradient(180deg, rgba(18, 18, 18, 0.8) 0%, rgba(12, 12, 12, 1) 100%);
+}
+
+.artwork-card-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+}
+
+.artwork-card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    line-height: 1.3;
+    margin: 0;
+    transition: color 0.25s ease;
+
+    /* Clamp title kung masyadong mahaba */
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Pagbabago ng kulay ng Pamagat kapag naka-hover */
+.artwork-card:hover .artwork-card-title {
+    color: #acb2b5;
+}
+
+.artwork-card-artist {
+    font-size: 0.8rem;
+    color: #8a8a8a;
+    margin: 0 0 0.75rem 0;
+    transition: color 0.25s ease;
+}
+
+.artwork-card:hover .artwork-card-artist {
+    color: #d4d4d4;
+}
+
+.artwork-card-price {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+
+/* 4. FEATURED ARTISTS GRID */
+.home-artists-grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1.25rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+@media (min-width: 640px) {
+    .home-artists-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .home-artists-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+.home-artist-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 0.875rem;
+    background-color: #121212;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-artist-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(172, 178, 181, 0.4);
+    background-color: #171717;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.home-artist-avatar-wrap {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.home-artist-card:hover .home-artist-avatar-wrap {
+    transform: scale(1.06);
+}
+
+.home-artist-name {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.2s ease;
+}
+
+.home-artist-card:hover .home-artist-name {
+    color: #acb2b5;
+}
+
+.home-artist-focus {
+    display: block;
+    font-size: 0.75rem;
+    color: #8a8a8a;
+    margin-top: 0.15rem;
+}
+
+.home-artist-link-prompt {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #acb2b5;
+    margin-top: 0.35rem;
+    opacity: 0.7;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.home-artist-card:hover .home-artist-link-prompt {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+
+/* 5. COMMUNITY BANNER */
+.home-community-banner {
+    border-radius: 1rem;
+    background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 1) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2.5rem 1.75rem;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.home-community-text {
+    font-size: 0.95rem;
+    color: #a3a3a3;
+    margin-top: 0.75rem;
+    margin-bottom: 1.75rem;
+    line-height: 1.6;
+}
+
+.home-community-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}

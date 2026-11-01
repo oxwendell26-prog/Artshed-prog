@@ -1,0 +1,133 @@
+/* ======================================================
+   NEW ARTIST MESSAGE PAGE STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Main Section Container */
+.new-msg-section {
+    max-width: 42rem;
+    /* 672px / max-w-2xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    /* 20px */
+    padding-right: 1.25rem;
+    padding-top: 3rem;
+    /* 48px */
+    padding-bottom: 4rem;
+    /* 64px */
+}
+
+@media (min-width: 640px) {
+    .new-msg-section {
+        padding-left: 2rem;
+        /* 32px sa tablet/desktop */
+        padding-right: 2rem;
+        padding-top: 4rem;
+        /* 48px */
+        padding-bottom: 4rem;
+    }
+}
+
+/* Back Link Style */
+.new-msg-back-link {
+    font-size: 0.875rem;
+    /* 14px */
+    color: #a3a3a3;
+    /* Neutral gray */
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s ease;
+}
+
+.new-msg-back-link:hover {
+    color: #ffffff;
+}
+
+/* Pamagat ng Pahina */
+.new-msg-title {
+    margin-top: 1rem;
+    font-size: 1.875rem;
+    /* 30px sa mobile */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+@media (min-width: 640px) {
+    .new-msg-title {
+        font-size: 2.25rem;
+        /* 36px sa tablet/desktop */
+    }
+}
+
+.new-msg-subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+/* Message Form Container */
+.new-msg-form {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* space-y-4 */
+    border-radius: 0.5rem;
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 1.5rem;
+    /* 24px */
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Textarea Field Group */
+.new-msg-field-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.new-msg-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #ffffff;
+    margin-bottom: 0.375rem;
+}
+
+.new-msg-textarea {
+    width: 100%;
+    border-radius: 0.375rem;
+    border: none;
+    background-color: #0a0a0a;
+    /* Neutral 950 */
+    padding: 0.625rem 0.75rem;
+    font-size: 0.875rem;
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    outline: none;
+    resize: vertical;
+    transition: box-shadow 0.2s ease;
+}
+
+.new-msg-textarea:focus {
+    box-shadow: inset 0 0 0 2px #acb2b5;
+    /* Brass focus ring */
+}
+
+/* Submit Button */
+.new-msg-send-btn {
+    border-radius: 0.25rem;
+    background-color: #acb2b5;
+    /* Brass */
+    padding: 0.625rem 1.25rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.new-msg-send-btn:hover {
+    background-color: #e0f2fe;
+    /* Amber-300 */
+}

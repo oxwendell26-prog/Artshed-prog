@@ -1,0 +1,127 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT TITLE #}
+{# ========================================== #}
+{% extends "admin_layout.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+{% endblock %}
+
+{% block title %}Admin overview | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT PANEL #}
+{# ========================================== #}
+{% block panel %}
+
+{# ------------------------------------------ #}
+{# A. Reusable Macro para sa mga Statistic Cards #}
+{# ------------------------------------------ #}
+{% macro stat(label, value, sub='') %}
+<div class="admin-stat-card">
+  <p class="admin-stat-label">{{ label }}</p>
+
+  <p class="admin-stat-value">{{ value }}</p>
+
+  {% if sub %}
+  <p class="admin-stat-sub">{{ sub }}</p>
+  {% endif %}
+</div>
+{% endmacro %}
+
+
+{# ------------------------------------------ #}
+{# B. Header at Deskripsyon ng Dashboard #}
+{# ------------------------------------------ #}
+<h1 class="admin-dashboard-title">Admin overview</h1>
+
+<p class="admin-dashboard-subtitle">A snapshot of the whole gallery.</p>
+
+
+{# ------------------------------------------ #}
+{# C. Grid ng mga Istatistika (Stats Cards) #}
+{# ------------------------------------------ #}
+<div class="admin-stats-grid">
+
+  {# Bilang ng mga Artist at Suspended Accounts #}
+  {{ stat('Artists', stats.artists, stats.suspended ~ ' suspended') }}
+
+  {# Bilang ng mga Naghihintay na Aplikasyon #}
+  {{ stat('Pending artist applications', stats.pending_artists) }}
+
+  {# Bilang ng mga Client Accounts #}
+  {{ stat('Client accounts', stats.clients) }}
+
+  {# Bilang ng mga Artworks, Hidden, at Sold #}
+  {{ stat('Artworks', stats.artworks, stats.hidden ~ ' hidden, ' ~ stats.sold ~ ' sold') }}
+
+  {# Bilang ng mga Orders at Pending Orders #}
+  {{ stat('Orders', stats.orders, order_counts.pending ~ ' waiting for payment') }}
+
+  {{ stat('Funds held (gross)', '₱{:,}'.format(stats.funds_held), order_counts.in_escrow ~ ' verified escrow order(s)') }}
+
+  {{ stat('Confirmed payouts awaiting release', stats.payouts_pending) }}
+
+  {{ stat('Payment receipts to verify', order_counts.payment_uploaded) }}
+
+  {# Kabuuang Benta o Sales #}
+  {{ stat('Completed sales', '₱{:,}'.format(stats.sales), order_counts.completed ~ ' completed order' ~ ('' if
+  order_counts.completed == 1 else 's')) }}
+
+  {{ stat('Cancelled orders', order_counts.cancelled) }}
+
+</div>
+
+
+{# Pindutan para suriin ang mga pending applications kung meron man #}
+{% if stats.pending_artists %}
+<a href="{{ url_for('admin_artist_applications') }}" class="admin-btn-brass">
+  Review pending applications
+</a>
+{% endif %}
+
+
+{# ========================================== #}
+{# 3. SEKSYON NG RECENT ORDERS #}
+{# ========================================== #}
+{% if recent_orders %}
+<div class="admin-orders-section">
+  <h2 class="admin-section-heading">Recent purchase orders</h2>
+
+  <ul class="admin-orders-list">
+    {% for o in recent_orders %}
+    <li class="admin-order-item">
+      <div class="admin-order-info">
+        <p class="admin-order-title">{{ o.artwork_title }}</p>
+
+        <p class="admin-order-meta">
+          {{ o.buyer_name }} to {{ o.artist.name }}
+        </p>
+      </div>
+
+      <div class="admin-order-end">
+        <p class="admin-order-price">{{ o.price_label }}</p>
+
+        <p class="admin-order-status">
+          {{ o.status|replace('_', ' ')|title }}
+          {% if o.payout_recorded_at and not o.payout_released %} · payout pending{% endif %}
+          {% if o.payout_released %} · payout released{% endif %}
+        </p>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{# ========================================== #}
+{# 4. JAVASCRIPT BLOCK #}
+{# ========================================== #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/admin_dashboard.js') }}"></script>
+{% endblock %}

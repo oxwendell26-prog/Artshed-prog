@@ -1,0 +1,173 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT TITLE #}
+{# ========================================== #}
+{% extends "admin_layout.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_orders.css') }}">
+{% endblock %}
+
+{% block title %}Orders & Escrow | Admin | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT PANEL #}
+{# ========================================== #}
+{% block panel %}
+
+<h1 class="admin-orders-title">Orders, Escrow & Payouts</h1>
+
+<p class="admin-orders-subtitle">
+  Manually verify payments to the platform account, hold funds until the client confirms receipt, and mark payouts as
+  released only after they have actually been transferred to the artist.
+</p>
+
+<div class="my-6 grid gap-4 sm:grid-cols-3">
+  <div class="rounded-lg bg-neutral-900 p-4 ring-1 ring-white/10">
+    <p class="text-xs text-neutral-400">Funds held (gross)</p>
+    <p class="mt-1 text-xl font-semibold text-white">₱{{ '{:,}'.format(funds_held) }}</p>
+    <p class="text-xs text-neutral-500">{{ held_order_count }} order(s) awaiting payout release</p>
+  </div>
+  <div class="rounded-lg bg-neutral-900 p-4 ring-1 ring-white/10">
+    <p class="text-xs text-neutral-400">Confirmed; payout to release</p>
+    <p class="mt-1 text-xl font-semibold text-amber-300">{{ payout_queue }}</p>
+  </div>
+  <div class="rounded-lg bg-amber-500/10 p-4 text-xs text-amber-200 ring-1 ring-amber-500/20">
+    Manual ledger only: this app does not receive, hold, or transfer money. Reconcile the actual platform account before
+    verifying funds or recording a payout release.
+  </div>
+</div>
+
+{# ========================================== #}
+{# 3. TALAHANAYAN NG MGA ORDERS (TABLE) #}
+{# ========================================== #}
+{% if orders %}
+<div class="admin-orders-table-container">
+  <table class="admin-orders-table">
+
+    <thead class="admin-orders-thead">
+      <tr>
+        <th class="admin-orders-th">Order ID</th>
+        <th class="admin-orders-th">Artwork & Artist</th>
+        <th class="admin-orders-th">Buyer</th>
+        <th class="admin-orders-th">Price, fee & payout</th>
+        <th class="admin-orders-th">Buyer Receipt</th>
+        <th class="admin-orders-th">Status & Admin Action</th>
+      </tr>
+    </thead>
+
+    <tbody class="admin-orders-tbody">
+      {% for o in orders %}
+      <tr class="admin-orders-tr">
+
+        {# Col 1: Order ID at Date #}
+        <td class="admin-orders-td admin-orders-nowrap admin-orders-text-light">
+          #{{ o.id }}<br />
+          <span class="admin-orders-text-muted">{{ o.created_at.strftime('%b %d, %Y') }}</span>
+        </td>
+
+        {# Col 2: Artwork & Artist #}
+        <td class="admin-orders-td">
+          <span class="admin-orders-title-text">{{ o.artwork_title }}</span><br>
+          <span class="text-xs text-neutral-400">by {{ o.artist.name }}</span>
+        </td>
+
+        {# Col 3: Buyer Details #}
+        <td class="admin-orders-td admin-orders-text-light">
+          {{ o.buyer_name }}<br />
+          <span class="admin-orders-break-all admin-orders-text-muted">{{ o.buyer_email }}</span><br />
+          <span class="admin-orders-text-muted">{{ o.buyer_phone }}</span>
+        </td>
+
+        {# Col 4: Price & 3% Commission #}
+        <td class="admin-orders-td admin-orders-nowrap text-xs">
+          <div><strong class="text-white">{{ o.price_label }}</strong></div>
+          <div class="text-amber-400 font-semibold">3% Comm: {{ o.commission_label }}</div>
+          <div class="text-emerald-400">Artist Payout: {{ o.payout_label }}</div>
+        </td>
+
+        {# Col 5: Proof of Payment #}
+        <td class="admin-orders-td">
+          {% if o.payment_proof %}
+          <a href="{{ url_for('static', filename='uploads/' ~ o.payment_proof) }}" target="_blank" rel="noopener noreferrer"
+            class="inline-block rounded border border-white/20 p-1 hover:border-white transition">
+            <img src="{{ url_for('static', filename='uploads/' ~ o.payment_proof) }}"
+              alt="Payment receipt for order #{{ o.id }}" class="h-10 w-10 object-cover rounded">
+          </a>
+          {% else %}
+          <span class="text-xs text-neutral-500">No receipt uploaded</span>
+          {% endif %}
+        </td>
+
+        {# Col 6: Escrow status and admin actions #}
+        <td class="admin-orders-td">
+          <div class="space-y-2">
+            {% if o.status == 'pending' %}
+            <span class="admin-badge-pending block">Awaiting platform payment</span>
+            {% elif o.status == 'payment_uploaded' %}
+            <span
+              class="inline-block rounded bg-amber-500/20 px-2 py-0.5 text-[10px] text-amber-300 font-semibold border border-amber-500/30">
+              Receipt uploaded - verification required
+            </span>
+            <form action="{{ url_for('admin_verify_payment', order_id=o.id) }}" method="POST">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit"
+                class="w-full rounded bg-blue-500 px-3 py-1 text-xs font-bold text-neutral-950 hover:bg-blue-400 transition">
+                Verify funds received &amp; hold in escrow
+              </button>
+            </form>
+            {% elif o.status == 'in_escrow' %}
+            <span
+              class="inline-block rounded bg-blue-500/20 px-2 py-0.5 text-[10px] text-blue-200 font-semibold border border-blue-500/30">
+              ✓ Payment verified and held in escrow
+            </span>
+            {% if o.funds_received_at %}
+            <span class="block text-[10px] text-neutral-400">{{ o.funds_received_at|ph_time }}</span>
+            {% endif %}
+            {% elif o.status == 'completed' %}
+            {% if o.payout_released %}
+            <span
+              class="inline-block rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] text-emerald-300 font-semibold border border-emerald-500/30">
+              ✓ Payout marked released{% if o.payout_released_at %} {{ o.payout_released_at|ph_time }}{% endif %}
+            </span>
+            {% elif o.payout_recorded_at and o.funds_received %}
+            <div class="space-y-1">
+              <span
+                class="inline-block rounded bg-amber-500/20 px-2 py-0.5 text-[10px] text-amber-300 font-semibold border border-amber-500/30">
+                Client confirmed{% if o.received_at %} {{ o.received_at|ph_time }}{% endif %} - payout awaiting release
+              </span>
+              <form action="{{ url_for('admin_release_payout', order_id=o.id) }}" method="POST"
+                onsubmit="return confirm('Only continue after you have actually transferred {{ o.payout_label }} to the artist.');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit"
+                  class="w-full rounded bg-emerald-500 px-3 py-1 text-xs font-bold text-neutral-950 hover:bg-emerald-400 transition">
+                  Mark {{ o.payout_label }} as released
+                </button>
+              </form>
+            </div>
+            {% else %}
+            <span class="text-xs text-amber-300">Client confirmed; payout record incomplete</span>
+            {% endif %}
+            {% else %}
+            <span class="admin-badge-declined block">Cancelled</span>
+            {% endif %}
+          </div>
+        </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<p class="admin-orders-empty">
+  No orders yet.
+</p>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/admin_orders.js') }}"></script>
+{% endblock %}

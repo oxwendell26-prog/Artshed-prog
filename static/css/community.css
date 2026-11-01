@@ -1,0 +1,620 @@
+/* ======================================================
+   COMMUNITY FEED PAGE STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Main Section Container */
+.community-section {
+    max-width: 48rem;
+    /* 768px / max-w-3xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    /* 20px */
+    padding-right: 1.25rem;
+    padding-top: 2.5rem;
+    /* 40px */
+    padding-bottom: 3.5rem;
+    /* 56px */
+}
+
+@media (min-width: 640px) {
+    .community-section {
+        padding-left: 2rem;
+        /* 32px sa tablet/desktop */
+        padding-right: 2rem;
+        padding-top: 3.5rem;
+        padding-bottom: 4rem;
+    }
+}
+
+/* Header Styles */
+.community-header {
+    margin-bottom: 2rem;
+}
+
+.community-tag {
+    font-size: 0.875rem;
+    /* 14px */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #acb2b5;
+    /* Brass accent */
+}
+
+.community-title {
+    margin-top: 0.5rem;
+    font-size: 2.25rem;
+    /* 36px sa mobile */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+@media (min-width: 640px) {
+    .community-title {
+        font-size: 3rem;
+        /* 48px sa tablet/desktop */
+    }
+}
+
+.community-subtitle {
+    margin-top: 0.75rem;
+    font-size: 1rem;
+    color: #a3a3a3;
+    /* Neutral 400 */
+}
+
+/* Modals Overlay (Lightbox & Edit Modals) */
+.community-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.9);
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.community-modal-overlay.hidden,
+.community-dialog-overlay.hidden {
+    display: none;
+}
+
+.community-dialog-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 1rem;
+}
+
+.community-dialog-box {
+    position: relative;
+    width: 100%;
+    max-width: 32rem;
+    /* max-w-lg */
+    border-radius: 0.75rem;
+    border: 1px solid #262626;
+    /* Neutral 800 */
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+}
+
+.community-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #262626;
+    padding-bottom: 0.75rem;
+}
+
+.community-dialog-title {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.community-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #a3a3a3;
+    cursor: pointer;
+}
+
+.community-close-btn:hover {
+    color: #ffffff;
+}
+
+/* Lightbox Full Size Image */
+.community-lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.community-lightbox-close:hover {
+    color: #acb2b5;
+}
+
+.community-lightbox-img {
+    max-height: 90vh;
+    max-width: 90vw;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    border: 1px solid #262626;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+}
+
+/* Create Post Form Card */
+.community-post-form-card {
+    margin-bottom: 2rem;
+    border-radius: 0.75rem;
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 1.25rem;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+@media (min-width: 640px) {
+    .community-post-form-card {
+        padding: 1.5rem;
+    }
+}
+
+.community-post-form-card:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.community-form-author-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.community-author-name {
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.community-author-sub {
+    font-size: 0.75rem;
+    color: #a3a3a3;
+}
+
+.community-caption-textarea {
+    margin-top: 1rem;
+    width: 100%;
+    resize: vertical;
+    border-radius: 0.375rem;
+    border: none;
+    background-color: #0a0a0a;
+    /* Neutral 950 */
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    outline: none;
+    transition: box-shadow 0.2s ease;
+}
+
+.community-caption-textarea::placeholder {
+    color: #737373;
+}
+
+.community-caption-textarea:focus {
+    box-shadow: inset 0 0 0 2px #acb2b5;
+}
+
+/* Form Footer Controls */
+.community-form-footer {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.community-file-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #e5e5e5;
+}
+
+.community-file-input {
+    margin-top: 0.375rem;
+    display: block;
+    max-width: 100%;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+    cursor: pointer;
+}
+
+.community-file-input::file-selector-button {
+    margin-right: 0.75rem;
+    border-radius: 0.25rem;
+    border: none;
+    background-color: #262626;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.community-file-input::file-selector-button:hover {
+    background-color: #404040;
+}
+
+.community-file-help {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: #737373;
+}
+
+.community-form-btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.community-btn-cancel {
+    border-radius: 0.25rem;
+    background: none;
+    padding: 0.625rem 1.25rem;
+    font-weight: 600;
+    color: #e5e5e5;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.community-btn-cancel:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.community-btn-share {
+    border-radius: 0.25rem;
+    background-color: #acb2b5;
+    /* Brass */
+    padding: 0.625rem 1.25rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.community-btn-share:hover {
+    background-color: #e0f2fe;
+    transform: scale(1.05);
+}
+
+/* Notice Banners (Pending / Client / Visitor) */
+.community-aside-notice {
+    margin-bottom: 2rem;
+    border-radius: 0.75rem;
+    background-color: #171717;
+    padding: 1.25rem;
+    color: #d4d4d4;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 0 0 1px rgba(229, 238, 239, 0.3);
+}
+
+.community-aside-link {
+    margin-left: 0.25rem;
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.community-aside-link:hover {
+    color: #acb2b5;
+}
+
+.community-aside-plain {
+    margin-bottom: 2rem;
+    border-radius: 0.75rem;
+    background-color: #171717;
+    padding: 1.25rem;
+    color: #d4d4d4;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Post Article Card Component */
+.community-post-article {
+    border-radius: 0.75rem;
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 1.25rem;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .community-post-article {
+        padding: 1.5rem;
+    }
+}
+
+.community-post-article:hover {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(218, 230, 235, 0.4);
+}
+
+.community-post-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.community-post-author-link {
+    font-weight: 500;
+    color: #ffffff;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.community-post-author-link:hover {
+    color: #acb2b5;
+}
+
+.community-post-time {
+    font-size: 0.75rem;
+    color: #a3a3a3;
+}
+
+/* Action Buttons sa loob ng Post (Edit/Delete) */
+.community-post-action-btn-edit {
+    border-radius: 0.25rem;
+    border: none;
+    background-color: #262626;
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #d4d4d4;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.community-post-action-btn-edit:hover {
+    background-color: #404040;
+    color: #ffffff;
+}
+
+.community-post-action-btn-delete {
+    border-radius: 0.25rem;
+    border: none;
+    background-color: rgba(220, 38, 38, 0.2);
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #f87171;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.community-post-action-btn-delete:hover {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+/* Caption Text */
+.community-post-caption {
+    color: #e5e5e5;
+    line-height: 1.625;
+    white-space: pre-line;
+}
+
+/* Media Display Wrapper */
+.community-media-wrapper {
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background-color: #0a0a0a;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.community-media-video,
+.community-media-img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+}
+
+.community-media-img {
+    cursor: pointer;
+    transition: transform 500ms ease;
+}
+
+.community-media-img:hover {
+    transform: scale(1.05);
+}
+
+/* Reactions Bar (Like / Heart) */
+.community-reactions-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid #262626;
+    padding-top: 0.75rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+.community-reaction-btn {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    color: inherit;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.community-reaction-btn:hover {
+    color: #ffffff;
+}
+
+.community-reaction-btn.liked {
+    color: #60a5fa;
+    /* Blue-400 */
+    font-weight: bold;
+}
+
+.community-reaction-btn.hearted {
+    color: #ef4444;
+    /* Red-500 */
+    font-weight: bold;
+}
+
+/* Comments Section */
+.community-comments-section {
+    border-top: 1px solid rgba(38, 38, 38, 0.6);
+    padding-top: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.community-comments-heading {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #a3a3a3;
+}
+
+.community-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.community-comment-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-radius: 0.5rem;
+    background-color: rgba(10, 10, 10, 0.6);
+    padding: 0.75rem;
+    font-size: 0.875rem;
+    box-shadow: inset 0 0 0 1px rgba(38, 38, 38, 0.4);
+}
+
+.community-comment-username {
+    font-weight: 500;
+    color: #ffffff;
+    font-size: 0.75rem;
+}
+
+.community-comment-content {
+    margin-top: 0.125rem;
+    font-size: 0.75rem;
+    color: #d4d4d4;
+    white-space: pre-line;
+}
+
+.community-comment-btn-edit,
+.community-comment-btn-delete {
+    background: none;
+    border: none;
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.community-comment-btn-edit {
+    color: #a3a3a3;
+}
+
+.community-comment-btn-edit:hover {
+    color: #ffffff;
+    background-color: #262626;
+}
+
+.community-comment-btn-delete {
+    color: #f87171;
+}
+
+.community-comment-btn-delete:hover {
+    color: #fca5a5;
+    background-color: rgba(220, 38, 38, 0.2);
+}
+
+/* Comment Form Input */
+.community-comment-form {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.community-comment-input {
+    flex: 1;
+    border-radius: 0.375rem;
+    border: none;
+    background-color: #0a0a0a;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.75rem;
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    outline: none;
+}
+
+.community-comment-input::placeholder {
+    color: #737373;
+}
+
+.community-comment-input:focus {
+    box-shadow: inset 0 0 0 2px #acb2b5;
+}
+
+.community-comment-submit-btn {
+    border-radius: 0.375rem;
+    background-color: #acb2b5;
+    border: none;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.community-comment-submit-btn:hover {
+    background-color: #e0f2fe;
+}
+
+/* Empty Posts Notice */
+.community-empty-notice {
+    border-radius: 0.75rem;
+    background-color: #171717;
+    padding: 1.5rem;
+    text-align: center;
+    color: #a3a3a3;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}

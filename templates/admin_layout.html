@@ -1,0 +1,68 @@
+{# ========================================== #}
+{# 1. BASE LAYOUT EXTENSION #}
+{# ========================================== #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating hiwalay na CSS file para sa admin layout #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_layout.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="admin-layout-container">
+  <div class="admin-layout-grid">
+
+    {# ========================================== #}
+    {# 2. SIDEBAR ADMIN NAVIGATION MENU #}
+    {# ========================================== #}
+    <aside aria-label="Admin menu" class="admin-sidebar">
+
+      <p class="admin-sidebar-title">Administration</p>
+
+      <nav class="admin-nav">
+
+        {% for endpoint, label in [
+        ('admin_dashboard', 'Overview'),
+        ('admin_artists', 'Artists'),
+        ('admin_clients', 'Clients'),
+        ('admin_artworks', 'Artworks'),
+        ('admin_orders', 'Orders'),
+        ('admin_artist_applications', 'Artist applications'),
+        ('notifications', 'Notifications'),
+        ('admin_manage_admins', 'Manage Admins')
+        ] %}
+
+        {% set active = request.endpoint == endpoint %}
+
+        <a href="{{ url_for(endpoint) }}" {% if active %}aria-current="page" {% endif %}
+          class="admin-nav-link {{ 'active' if active else '' }}">
+          <span>{{ label }}</span>
+          {% if endpoint == 'notifications' and unread_notifications %}
+          <span class="rounded-full bg-[#acb2b5] px-2 py-0.5 text-xs font-semibold text-neutral-950">
+            {{ unread_notifications }}
+          </span>
+          {% endif %}
+        </a>
+
+        {% endfor %}
+
+      </nav>
+
+    </aside>
+
+    {# ========================================== #}
+    {# 3. MAIN CONTENT PANEL AREA #}
+    {# ========================================== #}
+    <div class="admin-panel-area">
+      {% block panel %}{% endblock %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/admin_layout.js') }}"></script>
+{% endblock %}

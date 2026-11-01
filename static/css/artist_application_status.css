@@ -1,0 +1,112 @@
+/* ======================================================
+   ARTIST APPLICATION STATUS STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Main Section Container */
+.artist-status-section {
+    max-width: 42rem;
+    /* 672px / max-w-2xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    /* 20px */
+    padding-right: 1.25rem;
+    padding-top: 3.5rem;
+    /* 56px */
+    padding-bottom: 5rem;
+    /* 80px */
+}
+
+@media (min-width: 640px) {
+    .artist-status-section {
+        padding-left: 2rem;
+        /* 32px sa tablet/desktop */
+        padding-right: 2rem;
+        padding-top: 5rem;
+        /* 80px */
+        padding-bottom: 5rem;
+    }
+}
+
+/* Subtitle Tag / Kategorya */
+.artist-status-tag {
+    font-size: 0.875rem;
+    /* 14px */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #acb2b5;
+    /* Brass accent */
+}
+
+/* Pamagat ng Status Page */
+.artist-status-title {
+    margin-top: 0.75rem;
+    font-size: 1.875rem;
+    /* 30px sa mobile */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+@media (min-width: 640px) {
+    .artist-status-title {
+        font-size: 2.25rem;
+        /* 36px sa tablet/desktop */
+    }
+}
+
+/* Status Message Card Container */
+.artist-status-card {
+    margin-top: 1.75rem;
+    border-radius: 0.5rem;
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 1.5rem;
+    /* 24px */
+    box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.3);
+    /* Amber ring */
+}
+
+@media (min-width: 640px) {
+    .artist-status-card {
+        padding: 2rem;
+        /* 32px */
+    }
+}
+
+.artist-status-card-heading {
+    font-weight: 500;
+    color: #fde68a;
+    /* Amber-200 */
+}
+
+.artist-status-card-text {
+    margin-top: 0.75rem;
+    line-height: 1.625;
+    color: #d4d4d4;
+    /* Neutral 300 */
+}
+
+/* Action Buttons Container */
+.artist-status-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+/* Action Buttons */
+.artist-status-btn {
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #ffffff;
+    text-decoration: none;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+    transition: background-color 0.2s ease;
+}
+
+.artist-status-btn:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}

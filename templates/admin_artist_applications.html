@@ -1,0 +1,155 @@
+{# ========================================== #}
+{# 1. LAYOUT AT MACRO IMPORTS #}
+{# ========================================== #}
+{% extends "admin_layout.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_artist_applications.css') }}">
+{% endblock %}
+
+{% from "macros.html" import avatar %}
+
+{% block title %}Artist applications | Admin | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT PANEL #}
+{# ========================================== #}
+{% block panel %}
+
+<div class="admin-app-header">
+  <div>
+    <p class="admin-app-subtitle">
+      Review queue
+    </p>
+    <h1 class="admin-app-title">
+      Artist applications
+    </h1>
+    <p class="admin-app-count">
+      {{ applicants|length }} pending application{{ '' if applicants|length == 1 else 's' }}.
+    </p>
+  </div>
+</div>
+
+{# ========================================== #}
+{# 3. LISTAHAN NG MGA APPLICANTS (LOOP) #}
+{# ========================================== #}
+{% if applicants %}
+<ul class="admin-app-list">
+  {% for applicant in applicants %}
+  <li>
+    <article class="admin-app-card">
+
+      <div class="admin-app-profile-row">
+        {{ avatar(applicant, 'h-12 w-12', 'text-sm') }}
+
+        <div class="admin-app-info-flex">
+          <div class="admin-app-name-row">
+            <h2 class="admin-app-applicant-name">
+              {{ applicant.name }}
+            </h2>
+            <span class="admin-app-badge">
+              Pending approval
+            </span>
+          </div>
+
+          <p class="admin-app-email">
+            {{ applicant.email }}
+          </p>
+
+          <p class="admin-app-date">
+            Applied {{ applicant.created_at|ph_time }}
+          </p>
+        </div>
+      </div>
+
+      {# Proposed Style, Subject, Medium at Sample Works #}
+      <div class="mt-4 p-4 bg-neutral-950/60 rounded-lg border border-white/10">
+        <h4 class="text-xs font-semibold uppercase text-neutral-400 mb-1">Proposed Style & Medium:</h4>
+        <p class="text-sm text-white mb-3">
+          Style: <span class="text-[#acb2b5] font-medium">{{ applicant.art_style|default('N/A', true)|title }}</span> |
+          Subject: <span class="text-[#acb2b5] font-medium">{{ applicant.art_subject|default('N/A', true)|title
+            }}</span> |
+          Medium: <span class="text-[#acb2b5] font-medium">{{ applicant.art_medium|default('N/A', true)|title }}</span>
+        </p>
+
+        {% if applicant.sample_artworks %}
+        <h4 class="text-xs font-semibold uppercase text-neutral-400 mb-2">Uploaded Portfolio Samples:</h4>
+        <div class="flex flex-wrap gap-2">
+          {% for img in applicant.sample_artworks.split(',') %}
+          <a href="{{ url_for('static', filename='uploads/' ~ img) }}" target="_blank">
+            <img src="{{ url_for('static', filename='uploads/' ~ img) }}"
+              class="h-20 w-20 object-cover rounded border border-white/10 hover:border-[#acb2b5] transition">
+          </a>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-xs text-neutral-500 italic">No portfolio samples uploaded.</p>
+        {% endif %}
+      </div>
+
+      <dl class="admin-app-details-grid mt-4">
+        {% if applicant.experience %}
+        <div>
+          <dt class="admin-app-dt">
+            Experience
+          </dt>
+          <dd class="admin-app-dd">
+            {{ applicant.experience }}
+          </dd>
+        </div>
+        {% endif %}
+
+        {% if applicant.bio %}
+        <div class="admin-app-bio-container">
+          <dt class="admin-app-dt">
+            Bio
+          </dt>
+          <dd class="admin-app-dd">
+            {{ applicant.bio }}
+          </dd>
+        </div>
+        {% endif %}
+      </dl>
+
+      {# ========================================== #}
+      {# 4. MGA AKSYON (APPROVE / DECLINE) #}
+      {# ========================================== #}
+      <div class="admin-app-actions">
+
+        <form method="post"
+          action="{{ url_for('admin_artist_application_action', artist_id=applicant.id, action='approve') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button class="btn-approve">
+            Approve artist
+          </button>
+        </form>
+
+        <form method="post"
+          action="{{ url_for('admin_artist_application_action', artist_id=applicant.id, action='reject') }}"
+          onsubmit="return confirm('Decline this application and change the account to a client?');">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button class="btn-decline">
+            Decline as client
+          </button>
+        </form>
+
+      </div>
+
+    </article>
+  </li>
+  {% endfor %}
+</ul>
+
+{% else %}
+<p class="admin-app-empty">
+  There are no pending artist applications.
+</p>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/admin_artist_applications.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,215 @@
+/* ======================================================
+   BASE / GLOBAL STYLES (PROFESSIONAL ART GALLERY EDITION)
+   ====================================================== */
+
+:root {
+    --silver-accent: #acb2b5;
+    --silver-hover: #c9ced1;
+    --bg-dark: #07080b;
+    --card-glass: rgba(18, 19, 24, 0.85);
+    --border-glass: rgba(255, 255, 255, 0.08);
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background-image:
+        radial-gradient(circle at 20% 15%, rgba(172, 178, 181, 0.04) 0%, transparent 45%),
+        radial-gradient(circle at 80% 85%, rgba(172, 178, 181, 0.03) 0%, transparent 45%);
+    background-attachment: fixed;
+}
+
+/* Custom Canvas Art Styles - Background Effect */
+.canvas {
+    background:
+        radial-gradient(ellipse at 22% 28%, var(--c2) 0 18%, transparent 46%),
+        radial-gradient(ellipse at 78% 72%, var(--c3) 0 22%, transparent 55%),
+        linear-gradient(155deg,
+            var(--c1),
+            color-mix(in srgb, var(--c1) 55%, rgba(172, 178, 181, 0.15) 100%));
+}
+
+/* Spotlight Background Effect */
+.spotlight {
+    background: radial-gradient(ellipse 60% 70% at 70% 35%,
+            rgba(172, 178, 181, 0.06),
+            transparent 70%);
+}
+
+/* Focus State Accessibility Styling para sa mga Links at Buttons */
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--silver-accent);
+    outline-offset: 3px;
+}
+
+/* Smooth Page Entry Animation Effect */
+.page-enter {
+    opacity: 0;
+    transform: translateY(16px) scale(0.995);
+    transition:
+        opacity 500ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-enter.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* ======================================================
+   BUTTONS & INTERACTIVE ELEMENTS (SILVER THEME)
+   ====================================================== */
+.btn-silver,
+.dropdown-btn-silver {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    background-color: var(--silver-accent);
+    border-radius: 0.375rem;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(172, 178, 181, 0.2);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dropdown-btn-silver {
+    display: flex;
+    cursor: pointer;
+    list-style: none;
+    gap: 0.5rem;
+}
+
+.dropdown-btn-silver::-webkit-details-marker {
+    display: none;
+}
+
+/* Interactive Hover State para sa Buttons */
+.btn-silver:hover,
+.dropdown-btn-silver:hover {
+    background-color: var(--silver-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(172, 178, 181, 0.35);
+    color: #000000;
+}
+
+/* ======================================================
+   UNIFORM NAV BUTTONS (GLASSMORPHISM & GLOW)
+   ====================================================== */
+.nav-btn-silver {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #d4d4d4;
+    background-color: var(--card-glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-glass);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-btn-silver:hover {
+    transform: translateY(-2px);
+    background-color: rgba(30, 32, 40, 0.9);
+    color: var(--silver-accent);
+    border-color: rgba(172, 178, 181, 0.35);
+    box-shadow: 0 6px 20px rgba(172, 178, 181, 0.15);
+}
+
+/* ======================================================
+   SEARCH INPUT (RELAXED & SMOOTH FOCUS)
+   ====================================================== */
+.search-input-silver {
+    width: 100%;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: rgba(18, 19, 24, 0.85);
+    backdrop-filter: blur(8px);
+    padding: 0.5rem 2.5rem 0.5rem 0.85rem;
+    font-size: 0.875rem;
+    color: #ffffff;
+    box-shadow: 0 0 0 1px var(--border-glass);
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.search-input-silver::placeholder {
+    color: #737373;
+}
+
+.search-input-silver:focus {
+    box-shadow: 0 0 0 2px var(--silver-accent), 0 0 20px rgba(172, 178, 181, 0.25);
+    background-color: rgba(24, 26, 33, 0.95);
+}
+
+/* ======================================================
+   BACK TO TOP BUTTON (FLOATING GLOW EFFECT)
+   ====================================================== */
+.back-to-top-btn {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 40;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background-color: var(--silver-accent);
+    padding: 0.75rem;
+    color: #0a0a0a;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(172, 178, 181, 0.25);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.back-to-top-btn.hidden {
+    display: none;
+}
+
+.back-to-top-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    background-color: var(--silver-hover);
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(172, 178, 181, 0.45);
+}
+
+.back-to-top-btn:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 2px;
+}
+
+/* Scroll Progress Bar Glow */
+#scroll-progress {
+    transform: scaleX(0);
+    transform-origin: left;
+    background-color: var(--silver-accent);
+    box-shadow: 0 0 15px rgba(172, 178, 181, 0.9);
+    transition: transform 80ms linear;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+
+    .page-enter,
+    .page-enter.is-visible {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    #scroll-progress {
+        transition: none;
+    }
+}

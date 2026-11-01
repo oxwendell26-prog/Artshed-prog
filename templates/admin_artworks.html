@@ -1,0 +1,163 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{% extends "admin_layout.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_artworks.css') }}">
+{% endblock %}
+
+{% from "macros.html" import canvas %}
+
+{% block title %}Artworks | Admin | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT PANEL #}
+{# ========================================== #}
+{% block panel %}
+
+{# ------------------------------------------ #}
+{# A. Reusable Macro para sa mga Action Form #}
+{# ------------------------------------------ #}
+{% macro act(artwork, action, label, confirm='', danger=False) %}
+<form method="post" action="{{ url_for('admin_artwork_action', artwork_id=artwork.id, action=action) }}"
+  class="admin-action-form" {% if confirm %}onsubmit="return confirm('{{ confirm }}')" {% endif %}>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+  <button class="admin-action-btn {{ 'admin-action-btn-danger' if danger else 'admin-action-btn-normal' }}">
+    {{ label }}
+  </button>
+</form>
+{% endmacro %}
+
+
+{# ------------------------------------------ #}
+{# B. Header at Deskripsyon ng Pahina #}
+{# ------------------------------------------ #}
+<h1 class="admin-artworks-title">Artworks</h1>
+
+<p class="admin-artworks-subtitle">
+  {{ artworks|length }} artwork{{ '' if artworks|length == 1 else 's' }}. Unhiding/approving an artwork makes its custom
+  Style, Subject, and Medium live in the category dropdowns.
+</p>
+
+
+{# ========================================== #}
+{# 3. TALAHANAYAN NG MGA ARTWORKS (TABLE) #}
+{# ========================================== #}
+{% if artworks %}
+<div class="admin-artworks-table-container overflow-x-auto">
+  <table class="admin-artworks-table w-full text-left border-collapse">
+
+    {# Header ng Talahanayan #}
+    <thead class="admin-artworks-thead">
+      <tr>
+        <th class="admin-artworks-th">Artwork</th>
+        <th class="admin-artworks-th">Artist</th>
+        <th class="admin-artworks-th">Category & Medium</th>
+        <th class="admin-artworks-th">Price</th>
+        <th class="admin-artworks-th">Status</th>
+        <th class="admin-artworks-th">Actions</th>
+      </tr>
+    </thead>
+
+    {# Laman ng Talahanayan (Loop para sa bawat artwork) #}
+    <tbody class="admin-artworks-tbody">
+      {% for w in artworks %}
+      <tr class="admin-artworks-tr">
+
+        {# Col 1: Preview Canvas, Pamagat, at Taon #}
+        <td class="admin-artworks-td">
+          <div class="admin-artworks-item-flex flex items-center gap-3">
+            <div class="admin-artworks-canvas-wrapper aspect-square w-12 h-12 flex-shrink-0">
+              {{ canvas(w, 'aspect-square') }}
+            </div>
+
+            <div class="admin-artworks-info">
+              <a href="{{ url_for('artwork_detail', artwork_id=w.id) }}"
+                class="admin-artworks-link font-semibold text-white hover:underline">
+                {{ w.title }}
+              </a>
+              <p class="admin-artworks-year text-xs text-neutral-400">{{ w.year }}</p>
+            </div>
+          </div>
+        </td>
+
+        {# Col 2: Pangalan ng Artist #}
+        <td class="admin-artworks-td admin-artworks-text-muted">{{ w.artist_name }}</td>
+
+        {# Col 3: Custom Style, Subject, at Medium #}
+        <td class="admin-artworks-td">
+          <div class="text-xs text-neutral-300 space-y-0.5">
+            <p><span class="text-neutral-500">Style:</span> <span class="text-[#acb2b5] font-medium">{{ w.style|title
+                }}</span></p>
+            <p><span class="text-neutral-500">Subject:</span> <span class="text-[#acb2b5] font-medium">{{
+                w.subject|title }}</span></p>
+            <p><span class="text-neutral-500">Medium:</span> <span class="text-[#acb2b5] font-medium">{{ w.medium|title
+                }}</span></p>
+          </div>
+        </td>
+
+        {# Col 4: Presyo ng Artwork #}
+        <td class="admin-artworks-td admin-artworks-text-muted admin-artworks-nowrap">
+          {{ w.price_label }}
+        </td>
+
+        {# Col 5: Status Badges (Status Label at Hidden Status) #}
+        <td class="admin-artworks-td">
+          <div class="admin-artworks-badges-flex flex flex-col gap-1">
+            <span class="admin-badge-status text-xs px-2 py-0.5 rounded bg-neutral-800 text-neutral-300 w-fit">
+              {{ w.status_label }}
+            </span>
+
+            {% if w.hidden %}
+            <span
+              class="admin-badge-hidden text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 ring-1 ring-amber-500/20 w-fit">
+              Hidden
+            </span>
+            {% else %}
+            <span
+              class="text-xs px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 ring-1 ring-emerald-500/20 w-fit">
+              Live in Categories
+            </span>
+            {% endif %}
+          </div>
+        </td>
+
+        {# Col 6: Mga Pindutan ng Aksyon (Hide/Unhide at Delete) #}
+        <td class="admin-artworks-td">
+          <div class="admin-artworks-badges-flex flex items-center gap-2">
+
+            {# Pindutan para magtago o magpakita ng sining #}
+            {% if w.hidden %}
+            {{ act(w, 'unhide', 'Unhide & Publish') }}
+            {% else %}
+            {{ act(w, 'hide', 'Hide', 'Hide this artwork from the public and categories?') }}
+            {% endif %}
+
+            {# Pindutan para burahin nang lubusan ang artwork #}
+            {{ act(w, 'delete', 'Delete', 'Delete this artwork permanently? This cannot be undone.', True) }}
+
+          </div>
+        </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# Mensahe kung walang nakitang artworks #}
+{% else %}
+<p class="admin-artworks-empty">
+  No artworks yet.
+</p>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/admin_artworks.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,159 @@
+/* ======================================================
+   MESSAGES PAGE STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Pamagat ng Pahina */
+.messages-title {
+    font-size: 1.875rem;
+    /* 30px sa mobile */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+@media (min-width: 640px) {
+    .messages-title {
+        font-size: 2.25rem;
+        /* 36px sa tablet/desktop */
+    }
+}
+
+.messages-subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+    /* Neutral 400 */
+}
+
+/* Listahan ng mga Usapan */
+.messages-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    /* space-y-3 */
+    list-style: none;
+    padding: 0;
+}
+
+/* Conversation Article Card */
+.messages-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0.75rem;
+    border-radius: 0.5rem;
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 1.25rem;
+    /* 20px */
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.messages-card.unread {
+    box-shadow: inset 0 0 0 1px rgba(233, 180, 32, 0.5);
+    /* Brass ring kapag may unread */
+}
+
+.messages-card:hover {
+    box-shadow: inset 0 0 0 1px rgba(233, 180, 32, 0.6);
+}
+
+/* Main Chat Link Area */
+.messages-card-link {
+    min-width: 0;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+}
+
+.messages-card-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.messages-peer-name {
+    font-size: 1.25rem;
+    /* 20px */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.messages-peer-sub {
+    margin-top: 0.125rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+.messages-meta-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.messages-time {
+    font-size: 0.75rem;
+    color: #737373;
+    /* Neutral 500 */
+}
+
+/* Unread Badge */
+.messages-unread-badge {
+    border-radius: 9999px;
+    background-color: #acb2b5;
+    /* Brass */
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #0a0a0a;
+}
+
+/* Preview ng huling mensahe */
+.messages-latest-preview {
+    margin-top: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.875rem;
+    color: #d4d4d4;
+    /* Neutral 300 */
+    line-height: 1.5;
+}
+
+/* Delete Conversation Form & Button */
+.messages-delete-form {
+    display: flex;
+    align-items: center;
+}
+
+.messages-delete-btn {
+    border-radius: 0.25rem;
+    background: none;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #fca5a5;
+    /* Red-300 */
+    box-shadow: inset 0 0 0 1px rgba(248, 113, 113, 0.3);
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.messages-delete-btn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Empty Conversations Notice */
+.messages-empty-notice {
+    margin-top: 1.5rem;
+    border-radius: 0.5rem;
+    background-color: #171717;
+    padding: 1.5rem;
+    color: #a3a3a3;
+    font-size: 0.875rem;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}

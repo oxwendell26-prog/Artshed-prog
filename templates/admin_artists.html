@@ -1,0 +1,180 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{% extends "admin_layout.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_artists.css') }}">
+{% endblock %}
+
+{% from "macros.html" import avatar %}
+
+{% block title %}Artists | Admin | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT PANEL #}
+{# ========================================== #}
+{% block panel %}
+
+{# ------------------------------------------ #}
+{# A. Reusable Macro para sa mga Action Form #}
+{# ------------------------------------------ #}
+{% macro act(artist, action, label, confirm='', danger=False) %}
+<form method="post" action="{{ url_for('admin_artist_action', artist_id=artist.id, action=action) }}"
+  class="admin-action-form" {% if confirm %}onsubmit="return confirm('{{ confirm }}')" {% endif %}>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+  <button class="admin-action-btn {{ 'admin-action-btn-danger' if danger else 'admin-action-btn-normal' }}">
+    {{ label }}
+  </button>
+</form>
+{% endmacro %}
+
+
+{# ------------------------------------------ #}
+{# B. Header at Search Form #}
+{# ------------------------------------------ #}
+<h1 class="admin-artists-title">Accounts</h1>
+
+<p class="admin-artists-count">
+  {{ artists|length }} account{{ '' if artists|length == 1 else 's' }}{% if q %} matching “{{ q }}”{% endif %}.
+</p>
+
+<form method="get" class="admin-artists-search-form">
+  <label for="q" class="sr-only">Search accounts</label>
+
+  <input id="q" name="q" value="{{ q }}" placeholder="Search by name or email" class="admin-artists-input" />
+
+  <button class="admin-artists-search-btn">
+    Search
+  </button>
+</form>
+
+
+{# ========================================== #}
+{# 3. TALAHANAYAN NG MGA ACCOUNTS (TABLE) #}
+{# ========================================== #}
+{% if artists %}
+<div class="admin-artists-table-container">
+  <table class="admin-artists-table">
+
+    <thead class="admin-artists-thead">
+      <tr>
+        <th class="admin-artists-th">Account</th>
+        <th class="admin-artists-th">Type</th>
+        <th class="admin-artists-th">Joined</th>
+        <th class="admin-artists-th">Artworks</th>
+        <th class="admin-artists-th">Status</th>
+        <th class="admin-artists-th">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody class="admin-artists-tbody">
+      {% for a in artists %}
+      <tr class="admin-artists-tr">
+
+        {# Col 1: Avatar, Pangalan, at Email #}
+        <td class="admin-artists-td">
+          <div class="admin-artists-user-flex">
+            {{ avatar(a, 'h-10 w-10', 'text-sm') }}
+
+            <div class="admin-artists-user-info">
+              {% if a.account_type == 'artist' %}
+              <a href="{{ url_for('artist_detail', artist_id=a.id) }}" class="admin-artists-name-link">
+                {{ a.name }}
+              </a>
+              {% else %}
+              <p class="admin-artists-name-text">{{ a.name }}</p>
+              {% endif %}
+
+              <p class="admin-artists-email">{{ a.email }}</p>
+            </div>
+          </div>
+        </td>
+
+        {# Col 2: Uri ng Account #}
+        <td class="admin-artists-td admin-artists-text-muted">{{ a.account_type|title }}</td>
+
+        {# Col 3: Petsa ng Paglikha ng Account #}
+        <td class="admin-artists-td admin-artists-text-muted admin-artists-nowrap">
+          {{ a.created_at.strftime('%b %d, %Y') }}
+        </td>
+
+        {# Col 4: Bilang ng In-upload na Artworks #}
+        <td class="admin-artists-td admin-artists-text-muted">{{ a.works|length }}</td>
+
+        {# Col 5: Status Badges #}
+        <td class="admin-artists-td">
+          <div class="admin-artists-badges-flex">
+            {% if a.account_type == 'artist' and not a.is_approved %}
+            <span class="admin-badge-pending">
+              Pending approval
+            </span>
+            {% elif a.suspended %}
+            <span class="admin-badge-suspended">
+              Suspended
+            </span>
+            {% else %}
+            <span class="admin-badge-active">
+              Active
+            </span>
+            {% endif %}
+
+            {% if a.is_admin %}
+            <span class="admin-badge-admin">
+              Admin
+            </span>
+            {% endif %}
+          </div>
+        </td>
+
+        {# Col 6: Mga Pindutan ng Aksyon ng Admin #}
+        <td class="admin-artists-td">
+          {% if a.id == current_user.id %}
+          <span class="admin-artists-text-muted" style="color: #737373;">This is you</span>
+          {% else %}
+          <div class="admin-artists-badges-flex">
+
+            {# Aksyon para sa Suspend o Reactivate #}
+            {% if a.suspended %}
+            {{ act(a, 'activate', 'Reactivate') }}
+            {% elif not a.is_admin %}
+            {{ act(a, 'suspend', 'Suspend', 'Suspend this account? They will be logged out and their profile and
+            artworks will be hidden.', True) }}
+            {% endif %}
+
+            {# Pambura ng Account (Delete) #}
+            <form method="post" action="{{ url_for('admin_delete_account', account_id=a.id) }}"
+              class="admin-action-form"
+              onsubmit="return confirm('Are you sure you want to permanently delete {{ a.name }}\'s account?')">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+              <button type="submit" class="admin-action-btn admin-action-btn-danger">
+                Delete
+              </button>
+            </form>
+
+          </div>
+          {% endif %}
+        </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% else %}
+<p class="admin-artists-empty">
+  No artists found.
+</p>
+{% endif %}
+
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/admin_artists.js') }}"></script>
+{% endblock %}

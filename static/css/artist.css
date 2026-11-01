@@ -1,0 +1,346 @@
+/* ======================================================
+   INDIVIDUAL ARTIST PROFILE STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Main Header Section Wrapper */
+.artist-header-section {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.artist-header-container {
+    max-width: 80rem;
+    /* 1280px / max-w-7xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    /* 20px */
+    padding-right: 1.25rem;
+    padding-top: 3rem;
+    /* 48px */
+    padding-bottom: 4rem;
+    /* 64px */
+}
+
+@media (min-width: 640px) {
+    .artist-header-container {
+        padding-left: 2rem;
+        /* 32px sa tablet/desktop */
+        padding-right: 2rem;
+        padding-top: 4rem;
+        /* 64px */
+        padding-bottom: 4rem;
+    }
+}
+
+/* Back Link Style */
+.artist-back-link {
+    font-size: 0.875rem;
+    /* 14px */
+    color: #a3a3a3;
+    /* Neutral gray */
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s ease;
+}
+
+.artist-back-link:hover {
+    color: #ffffff;
+}
+
+/* Profile Content Layout (Avatar + Details) */
+.artist-profile-flex {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+    /* 32px */
+}
+
+.artist-profile-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.artist-profile-name {
+    font-size: 2.25rem;
+    /* 36px sa mobile */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+@media (min-width: 640px) {
+    .artist-profile-name {
+        font-size: 3rem;
+        /* 48px sa tablet/desktop */
+    }
+}
+
+.artist-profile-style {
+    margin-top: 0.5rem;
+    font-size: 1.125rem;
+    /* 18px */
+    color: #acb2b5;
+    /* Brass accent */
+}
+
+.artist-profile-meta {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+.artist-profile-bio-snippet {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+/* Action Buttons (Edit Profile / Message / Create Account) */
+.artist-action-link-edit {
+    margin-top: 1rem;
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s ease;
+}
+
+.artist-action-link-edit:hover {
+    color: #acb2b5;
+}
+
+.artist-action-btn-brass {
+    margin-top: 1rem;
+    display: inline-block;
+    border-radius: 0.25rem;
+    background-color: #acb2b5;
+    /* Brass accent */
+    padding: 0.625rem 1.25rem;
+    /* 10px 20px */
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.artist-action-btn-brass:hover {
+    background-color: #e0f2fe;
+    /* Amber-300 */
+}
+
+/* About Section & Stats Grid Layout */
+.artist-about-grid {
+    margin-top: 2.5rem;
+    display: grid;
+    gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+    .artist-about-grid {
+        grid-template-columns: 1.4fr 1fr;
+    }
+}
+
+.artist-section-heading {
+    font-size: 1.5rem;
+    /* 24px */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.artist-about-text {
+    margin-top: 1rem;
+    max-width: 42rem;
+    font-size: 1.125rem;
+    /* 18px */
+    line-height: 1.75;
+    color: #d4d4d4;
+    /* Neutral 300 */
+}
+
+.artist-about-empty {
+    margin-top: 1rem;
+    color: #a3a3a3;
+    font-size: 0.875rem;
+}
+
+/* Stats Box DL Styling */
+.artist-stats-dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    align-self: start;
+    border-radius: 0.5rem;
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 1.5rem;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.artist-stat-dt {
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+.artist-stat-dd {
+    font-size: 1.5rem;
+    /* 24px */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.artist-stat-span-2 {
+    grid-column: span 2 / span 2;
+}
+
+.artist-stat-text-white {
+    color: #ffffff;
+    font-size: 0.875rem;
+}
+
+/* Artworks Gallery Section */
+.artist-gallery-section {
+    max-width: 80rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+@media (min-width: 640px) {
+    .artist-gallery-section {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
+
+.artist-gallery-grid {
+    margin-top: 2.5rem;
+    display: grid;
+    gap: 1.5rem;
+    /* 24px */
+    list-style: none;
+    padding: 0;
+}
+
+@media (min-width: 640px) {
+    .artist-gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .artist-gallery-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* Artwork Card Item Styling */
+.artist-artwork-card {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background-color: #171717;
+    /* Neutral 900 */
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.artist-artwork-card:hover,
+.artist-artwork-card:focus-within {
+    box-shadow: 0 0 0 1px rgba(212, 220, 224, 0.6);
+    transform: translateY(-0.25rem);
+    /* Brass ring on hover */
+}
+
+.artist-artwork-body {
+    padding: 1.25rem;
+}
+
+.artist-artwork-header-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.artist-artwork-title {
+    font-size: 1.25rem;
+    /* 20px */
+    line-height: 1.4;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.artist-artwork-link-overlay {
+    text-decoration: none;
+    color: inherit;
+}
+
+.artist-artwork-link-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+}
+
+.artist-artwork-year {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #e5e5e5;
+}
+
+.artist-artwork-size {
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+.artist-artwork-price {
+    margin-top: 0.75rem;
+    font-weight: 500;
+    color: #acb2b5;
+    /* Brass */
+}
+
+.artist-artwork-note {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #a3a3a3;
+}
+
+/* Artwork Buy Button */
+.artist-artwork-buy-btn {
+    position: relative;
+    z-index: 10;
+    margin-top: 1rem;
+    display: inline-block;
+    border-radius: 0.25rem;
+    background-color: #acb2b5;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.artist-artwork-buy-btn:hover {
+    background-color: #e0f2fe;
+}
+
+/* Empty Artworks Notice */
+.artist-gallery-empty {
+    margin-top: 1.5rem;
+    border-radius: 0.5rem;
+    background-color: #171717;
+    padding: 1.5rem;
+    color: #a3a3a3;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}

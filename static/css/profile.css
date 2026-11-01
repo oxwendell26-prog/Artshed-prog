@@ -1,0 +1,277 @@
+/* ======================================================
+   EDIT PROFILE PAGE STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Profile Container */
+.profile-container {
+    max-width: 50rem;
+    /* 800px */
+    margin-left: auto;
+    margin-right: auto;
+    color: #ffffff;
+}
+
+/* Back Link Style */
+.profile-back-link {
+    font-size: 0.875rem;
+    /* 14px */
+    color: #a3a3a3;
+    /* Neutral gray */
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s ease;
+}
+
+.profile-back-link:hover {
+    color: #ffffff;
+}
+
+/* Pamagat ng Pahina */
+.profile-title {
+    margin-top: 0.625rem;
+    font-size: 1.75rem;
+    /* 28px */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+/* Cover Photo Section */
+.profile-cover-wrapper {
+    position: relative;
+    height: 12.5rem;
+    /* 200px */
+    background-color: #262626;
+    /* Neutral 800 */
+    border-radius: 0.5rem 0.5rem 0 0;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.profile-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-cover-btn {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #ffffff;
+    border: none;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    /* 12px */
+    z-index: 10;
+    transition: background-color 0.2s ease;
+}
+
+.profile-cover-btn:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Profile Picture / Avatar Section */
+.profile-avatar-section {
+    position: relative;
+    margin-top: -3.125rem;
+    /* -50px */
+    margin-left: 1.5rem;
+    /* 24px */
+    width: 6.25rem;
+    /* 100px */
+    height: 6.25rem;
+    /* 100px */
+    border-radius: 9999px;
+    border: 4px solid #111111;
+    background-color: #333333;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.profile-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-avatar-initials {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.25rem;
+    /* 20px */
+    color: #ffffff;
+}
+
+.profile-avatar-btn {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 0.6875rem;
+    /* 11px */
+    z-index: 10;
+}
+
+.profile-avatar-section:hover .profile-avatar-btn {
+    opacity: 1;
+}
+
+/* Main Profile Details Form */
+.profile-form {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.profile-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-form-label {
+    display: block;
+    font-size: 0.875rem;
+    /* 14px */
+    margin-bottom: 0.375rem;
+    color: #d4d4d4;
+    /* Neutral 300 */
+}
+
+.profile-form-control {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    background-color: #1a1a1a;
+    border: 1px solid #444444;
+    color: #ffffff;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    font-size: 0.875rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.profile-form-control:focus {
+    border-color: #acb2b5;
+    /* Brass accent */
+}
+
+.profile-btn-save {
+    background-color: #acb2b5;
+    /* Brass */
+    color: #0a0a0a;
+    font-weight: bold;
+    padding: 0.625rem 1.25rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    width: fit-content;
+    transition: background-color 0.2s ease;
+}
+
+.profile-btn-save:hover {
+    background-color: #e0f2fe;
+    /* Amber-300 */
+}
+
+/* Modal Styles (Cropper & Fullscreen) */
+.profile-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.profile-modal-box {
+    background-color: #1e1e1e;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    width: 90%;
+    max-width: 31.25rem;
+    /* 500px */
+    border: 1px solid #444444;
+}
+
+.profile-modal-image-container {
+    max-height: 21.875rem;
+    /* 350px */
+    overflow: hidden;
+    margin-top: 0.9375rem;
+}
+
+.profile-modal-image-container img {
+    max-width: 100%;
+}
+
+.profile-modal-actions {
+    margin-top: 1.25rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.625rem;
+}
+
+.profile-btn-modal-cancel {
+    background: transparent;
+    color: #aaaaaa;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.profile-btn-modal-save {
+    background-color: #acb2b5;
+    color: #0a0a0a;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Fullscreen Image View Modal */
+.profile-fullscreen-modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.profile-fullscreen-modal img {
+    max-width: 90%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 0.25rem;
+}
+
+.profile-fullscreen-close {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.875rem;
+    color: #ffffff;
+    font-size: 2.1875rem;
+    /* 35px */
+    cursor: pointer;
+    background: none;
+    border: none;
+}

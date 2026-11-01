@@ -1,0 +1,158 @@
+/* ======================================================
+   ACCOUNT LAYOUT MAIN STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Main Section Container - Nagbibigay ng padding at nagpapanatili ng gitnang posisyon ng buong layout */
+.account-container {
+    max-width: 80rem;
+    /* 1280px maximum na lapad */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    /* 20px space sa kaliwa */
+    padding-right: 1.25rem;
+    /* 20px space sa kanan */
+    padding-top: 2.5rem;
+    /* 40px space sa itaas */
+    padding-bottom: 2.5rem;
+    /* 40px space sa ibaba */
+}
+
+/* Layout Grid System - Nag-aayos sa sidebar at main content panel sa gilid nito */
+.account-grid {
+    display: grid;
+    gap: 2rem;
+    /* 32px na espasyo sa pagitan ng sidebar at ng nilalaman */
+    grid-template-columns: 1fr;
+    /* Sa maliliit na screen (mobile), paisa-isa ang bagsak pababa */
+}
+
+/* Navigation Sidebar Container */
+.account-sidebar {
+    width: 100%;
+}
+
+/* Nav Menu Flex Container - Para sa pag-scroll sa mobile at vertical layout sa desktop */
+.account-nav {
+    display: flex;
+    gap: 0.5rem;
+    /* 8px espasyo sa pagitan ng mga menu buttons */
+    overflow-x: auto;
+    /* Pinapayagan ang pahalang na scroll kapag pumasok sa mobile view */
+    padding-bottom: 0.25rem;
+}
+
+/* Divider Line sa pagitan ng mga menu section */
+.account-nav-divider {
+    display: none;
+    /* Nakatago sa mobile view */
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    /* Banayad na puting linya */
+}
+
+/* Link / Button Base Style para sa bawat item sa menu */
+.account-nav-link {
+    display: flex;
+    flex-shrink: 0;
+    /* Pinipigilan ang pagliit ng button kapag nag-scroll */
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    /* 12px na agwat sa pagitan ng teksto at ng notification badge */
+    border-radius: 0.375rem;
+    /* Mabilog ang sulok (6px) */
+    padding: 0.625rem 1rem;
+    /* 10px itaas/ibaba, 16px kaliwa/kanan */
+    font-size: 0.875rem;
+    /* 14px laki ng font */
+    font-weight: 500;
+    text-decoration: none;
+    /* Tinataggal ang salungguhit sa mga link */
+    color: #d4d4d4;
+    /* Light gray na kulay ng teksto */
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Hover State - Kapag itinapat ang cursor sa hindi aktibong link */
+.account-nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #ffffff;
+}
+
+/* Active State - Kulay ng link para sa kasalukuyang pahina kung nasaan ang user */
+.account-nav-link.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    /* Puti at banayad na outer border ring */
+}
+
+/* Notification Badges (Pabilog na bilang para sa Unread Messages/Notifications/Orders) */
+.account-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    /* Ganap na pabilog */
+    background-color: #acb2b5;
+    /* Brass / Amber Gold accent color */
+    padding: 0.125rem 0.5rem;
+    /* Spacing sa loob ng badge */
+    font-size: 0.75rem;
+    /* 12px laki ng bilang */
+    font-weight: 600;
+    color: #0a0a0a;
+    /* Madilim na kulay ng teksto para madaling mabasa */
+}
+
+/* Main Content Panel - Ang lugar kung saan lumalabas ang nilalaman ng bawat pahina */
+.account-panel {
+    min-width: 0;
+    /* Pinipigilan ang pag-overflow ng malalaking elemento sa grid */
+    width: 100%;
+}
+
+.account-panel-max-2xl {
+    max-width: 42rem;
+    /* Likas na limitasyon sa lapad para sa mga forms o cards (672px) */
+}
+
+/* ======================================================
+   RESPONSIVE DESIGN (DESKTOP VIEW STYLES)
+   ====================================================== */
+
+/* Para sa malalaking screen (Laptops & Desktop Monitors) */
+@media (min-width: 1024px) {
+    .account-grid {
+        /* Hinahati ang screen: 13rem (208px) para sa sidebar, at natitirang espasyo (1fr) para sa content */
+        grid-template-columns: 13rem 1fr;
+    }
+
+    .account-nav {
+        flex-direction: column;
+        /* Ginagawang patayo (vertical) ang listahan ng menu */
+        overflow-x: visible;
+        /* Tinatanggal ang horizontal scroll sa desktop */
+        padding-bottom: 0;
+    }
+
+    .account-nav-divider {
+        display: block;
+        /* Ipinapakita na ang divider line sa desktop */
+    }
+}
+
+/* Para sa katamtamang laki ng screen (Tablets) */
+@media (min-width: 640px) {
+    .account-container {
+        padding-left: 2rem;
+        /* 32px */
+        padding-right: 2rem;
+        padding-top: 3.5rem;
+        /* 56px */
+        padding-bottom: 3.5rem;
+    }
+}

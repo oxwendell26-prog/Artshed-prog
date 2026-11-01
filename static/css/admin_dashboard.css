@@ -1,0 +1,167 @@
+/* ======================================================
+   ADMIN DASHBOARD OVERVIEW STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Main Header at Deskripsyon ng Dashboard */
+.admin-dashboard-title {
+    font-size: 1.875rem;
+    /* 30px sa mobile */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+@media (min-width: 640px) {
+    .admin-dashboard-title {
+        font-size: 2.25rem;
+        /* 36px sa tablet/desktop */
+    }
+}
+
+.admin-dashboard-subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+    /* Neutral gray */
+}
+
+/* Grid para sa mga Statistic Cards */
+.admin-stats-grid {
+    margin-top: 2rem;
+    display: grid;
+    gap: 1rem;
+    /* 16px na espasyo sa pagitan ng mga kard */
+}
+
+@media (min-width: 640px) {
+    .admin-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        /* Dalawang kolum sa tablet */
+    }
+}
+
+@media (min-width: 1280px) {
+    .admin-stats-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        /* Tatlong kolum sa malaking desktop monitor */
+    }
+}
+
+/* Stat Card Styling (Mula sa macro) */
+.admin-stat-card {
+    border-radius: 0.5rem;
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 1.25rem;
+    /* 20px */
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    /* Banayad na border ring */
+}
+
+.admin-stat-label {
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+.admin-stat-value {
+    margin-top: 0.25rem;
+    font-size: 1.875rem;
+    /* 30px */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.admin-stat-sub {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+/* Brass Action Button (Review pending applications) */
+.admin-btn-brass {
+    margin-top: 1.25rem;
+    display: inline-flex;
+    border-radius: 0.25rem;
+    background-color: #acb2b5;
+    /* Brass / Amber accent */
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.admin-btn-brass:hover {
+    background-color: #e0f2fe;
+    /* Mas matingkad na dilaw kapag naka-hover */
+}
+
+/* Seksyon ng Recent Orders */
+.admin-orders-section {
+    margin-top: 2.5rem;
+}
+
+.admin-section-heading {
+    font-size: 1.25rem;
+    /* 20px */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.admin-orders-list {
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+    background-color: #171717;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    list-style: none;
+    padding: 0;
+}
+
+/* Naglalagay ng divider sa pagitan ng mga item sa listahan ng order */
+.admin-orders-list>li+li {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-order-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.admin-order-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.admin-order-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.admin-order-meta {
+    margin-top: 0.125rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+.admin-order-end {
+    flex-shrink: 0;
+    text-align: right;
+}
+
+.admin-order-price {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.admin-order-status {
+    margin-top: 0.125rem;
+    font-size: 0.875rem;
+    text-transform: capitalize;
+    color: #a3a3a3;
+}

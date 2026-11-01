@@ -1,0 +1,138 @@
+/* ======================================================
+   ADMIN ORDERS MANAGEMENT STYLES (PURONG CSS)
+   ====================================================== */
+
+.admin-orders-title {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+@media (min-width: 640px) {
+    .admin-orders-title {
+        font-size: 2.25rem;
+    }
+}
+
+.admin-orders-subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+.admin-orders-table-container {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.admin-orders-table {
+    width: 100%;
+    min-width: 54rem;
+    text-align: left;
+    font-size: 0.875rem;
+    border-collapse: collapse;
+}
+
+.admin-orders-thead {
+    background-color: #171717;
+    color: #a3a3a3;
+}
+
+.admin-orders-th {
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+}
+
+.admin-orders-tbody {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-orders-tr {
+    vertical-align: top;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-orders-td {
+    padding: 0.75rem 1rem;
+}
+
+.admin-orders-nowrap {
+    white-space: nowrap;
+}
+
+.admin-orders-text-light {
+    color: #d4d4d4;
+}
+
+.admin-orders-text-muted {
+    font-size: 0.75rem;
+    color: #737373;
+}
+
+.admin-orders-title-text {
+    color: #ffffff;
+}
+
+.admin-orders-break-all {
+    word-break: break-all;
+}
+
+/* Status Badges */
+.admin-badge-pending {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background-color: rgba(233, 180, 32, 0.15);
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #acb2b5;
+    box-shadow: inset 0 0 0 1px rgba(233, 180, 32, 0.4);
+}
+
+.admin-badge-accepted {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background-color: rgba(251, 191, 36, 0.1);
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #fde68a;
+    box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.3);
+}
+
+.admin-badge-completed {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background-color: rgba(52, 211, 153, 0.1);
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6ee7b7;
+    box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.3);
+}
+
+.admin-badge-declined {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #a3a3a3;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.admin-orders-empty {
+    margin-top: 1.5rem;
+    border-radius: 0.5rem;
+    background-color: #171717;
+    padding: 1.5rem;
+    color: #a3a3a3;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}

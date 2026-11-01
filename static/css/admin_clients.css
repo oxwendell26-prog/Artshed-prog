@@ -1,0 +1,270 @@
+/* ======================================================
+   ADMIN CLIENTS MANAGEMENT STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Main Container Space */
+.admin-clients-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* 24px */
+}
+
+/* Header Flex Layout */
+.admin-clients-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .admin-clients-header {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+.admin-clients-title {
+    font-size: 1.5rem;
+    /* 24px */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.admin-clients-subtitle {
+    font-size: 0.875rem;
+    /* 14px */
+    color: #a3a3a3;
+    /* Neutral gray */
+    margin-top: 0.25rem;
+}
+
+/* Search Form Wrapper */
+.admin-clients-search-form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Search Input Field */
+.admin-clients-input {
+    width: 100%;
+    border-radius: 0.375rem;
+    border: 1px solid #262626;
+    /* Neutral 800 */
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #ffffff;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.admin-clients-input:focus {
+    border-color: #404040;
+    /* Neutral 700 kapag naka-focus */
+}
+
+.admin-clients-input::placeholder {
+    color: #737373;
+}
+
+/* Search Button */
+.admin-clients-search-btn {
+    border-radius: 0.375rem;
+    background-color: #262626;
+    /* Neutral 800 */
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+}
+
+.admin-clients-search-btn:hover {
+    background-color: #404040;
+    /* Neutral 700 */
+}
+
+/* Talahanayan (Table) Container */
+.admin-clients-table-wrapper {
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    border: 1px solid #262626;
+    background-color: #171717;
+}
+
+.admin-clients-table {
+    width: 100%;
+    text-align: left;
+    font-size: 0.875rem;
+    color: #d4d4d4;
+    border-collapse: collapse;
+}
+
+/* Table Header */
+.admin-clients-thead {
+    border-bottom: 1px solid #262626;
+    background-color: #0a0a0a;
+    /* Neutral 950 */
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #a3a3a3;
+}
+
+.admin-clients-th {
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+}
+
+.admin-clients-th-right {
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* Table Body at Rows */
+.admin-clients-tbody {
+    border-top: 1px solid #262626;
+}
+
+.admin-clients-tr {
+    border-bottom: 1px solid #262626;
+    transition: background-color 0.2s ease;
+}
+
+.admin-clients-tr:hover {
+    background-color: rgba(38, 38, 38, 0.5);
+    /* Hover effect sa rows */
+}
+
+.admin-clients-td {
+    padding: 1rem 1.5rem;
+}
+
+.admin-clients-td-right {
+    padding: 1rem 1.5rem;
+    text-align: right;
+}
+
+/* Pangalan at Email sa loob ng Cell */
+.admin-client-name {
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.admin-client-email {
+    font-size: 0.75rem;
+    color: #a3a3a3;
+    margin-top: 0.125rem;
+}
+
+.admin-client-date {
+    font-size: 0.75rem;
+}
+
+/* Status Badges */
+.admin-badge-suspended {
+    display: inline-block;
+    border-radius: 0.25rem;
+    background-color: rgba(239, 68, 68, 0.1);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.admin-badge-active {
+    display: inline-block;
+    border-radius: 0.25rem;
+    background-color: rgba(34, 197, 94, 0.1);
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+/* Action Buttons Container */
+.admin-clients-actions {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.admin-action-form {
+    display: inline-block;
+}
+
+/* Undo / Activate Button */
+.btn-client-activate {
+    border-radius: 0.25rem;
+    background-color: rgba(5, 150, 105, 0.2);
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #34d399;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-client-activate:hover {
+    background-color: #059669;
+    color: #ffffff;
+}
+
+/* Suspend Button */
+.btn-client-suspend {
+    border-radius: 0.25rem;
+    background-color: rgba(217, 119, 6, 0.2);
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #fbbf24;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-client-suspend:hover {
+    background-color: #d97706;
+    color: #ffffff;
+}
+
+/* Delete Button */
+.btn-client-delete {
+    border-radius: 0.25rem;
+    background-color: rgba(220, 38, 38, 0.2);
+    padding: 0.25rem 0.625rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #f87171;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-client-delete:hover {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+/* Protected Text */
+.admin-client-protected {
+    font-size: 0.75rem;
+    color: #737373;
+    font-style: italic;
+}
+
+/* Empty State Message */
+.admin-clients-empty {
+    padding: 2rem;
+    text-align: center;
+    color: #737373;
+}

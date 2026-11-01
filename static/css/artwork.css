@@ -1,0 +1,331 @@
+/* ======================================================
+   INDIVIDUAL ARTWORK DETAIL PAGE STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Main Section Container */
+.artwork-section {
+    max-width: 80rem;
+    /* 1280px / max-w-7xl */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.25rem;
+    /* 20px */
+    padding-right: 1.25rem;
+    padding-top: 3rem;
+    /* 48px */
+    padding-bottom: 4rem;
+    /* 64px */
+}
+
+@media (min-width: 640px) {
+    .artwork-section {
+        padding-left: 2rem;
+        /* 32px sa tablet/desktop */
+        padding-right: 2rem;
+        padding-top: 4rem;
+        /* 64px */
+        padding-bottom: 4rem;
+    }
+}
+
+/* Back Link Style */
+.artwork-back-link {
+    font-size: 0.875rem;
+    /* 14px */
+    color: #a3a3a3;
+    /* Neutral gray */
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s ease;
+}
+
+.artwork-back-link:hover {
+    color: #ffffff;
+}
+
+/* Main Grid Layout (Image + Details) */
+.artwork-grid {
+    margin-top: 2rem;
+    display: grid;
+    align-items: start;
+    gap: 3rem;
+    /* 48px */
+}
+
+@media (min-width: 1024px) {
+    .artwork-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Canvas / Image Display Container */
+.artwork-canvas-wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 32rem;
+    /* max-w-lg */
+}
+
+@media (min-width: 1024px) {
+    .artwork-canvas-wrapper {
+        max-width: none;
+    }
+}
+
+.artwork-canvas-box {
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 0.75rem;
+    /* 12px */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    border-radius: 0.25rem;
+}
+
+/* Title & Status Badge Row */
+.artwork-title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.artwork-main-title {
+    font-size: 2.25rem;
+    /* 36px sa mobile */
+    line-height: 1.25;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+@media (min-width: 640px) {
+    .artwork-main-title {
+        font-size: 3rem;
+        /* 48px sa tablet/desktop */
+    }
+}
+
+/* Artist Link by Avatar */
+.artwork-artist-link {
+    margin-top: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: #d4d4d4;
+    transition: color 0.2s ease;
+}
+
+.artwork-artist-link:hover {
+    color: #ffffff;
+}
+
+.artwork-artist-name-text {
+    text-underline-offset: 4px;
+}
+
+.artwork-artist-link:hover .artwork-artist-name-text {
+    text-decoration: underline;
+}
+
+/* Purchase / Checkout Box Card */
+.artwork-purchase-card {
+    margin-top: 2rem;
+    border-radius: 0.5rem;
+    background-color: #171717;
+    /* Neutral 900 */
+    padding: 1.5rem;
+    /* 24px */
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.artwork-price-label {
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+.artwork-price-amount {
+    margin-top: 0.25rem;
+    font-size: 2.25rem;
+    font-weight: bold;
+}
+
+.artwork-price-amount.available {
+    color: #ffffff;
+}
+
+.artwork-price-amount.sold {
+    color: #737373;
+    /* Neutral 500 */
+}
+
+/* Purchase / Status Notice Texts */
+.artwork-notice-text {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #a3a3a3;
+}
+
+.artwork-notice-reserved {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: #fde68a;
+    /* Amber-300 */
+}
+
+/* Primary Action Buttons (Checkout / Create Account) */
+.artwork-btn-brass {
+    margin-top: 1.25rem;
+    display: inline-block;
+    border-radius: 0.25rem;
+    background-color: #acb2b5;
+    /* Brass */
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    color: #0a0a0a;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.artwork-btn-brass:hover {
+    background-color: #e0f2fe;
+    transform: translateY(-0.125rem);
+    /* Amber-300 */
+}
+
+/* Secondary Action Buttons (Message Artist) */
+.artwork-btn-outline {
+    margin-top: 1.25rem;
+    display: inline-block;
+    border-radius: 0.25rem;
+    padding: 0.75rem 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    color: #ffffff;
+    text-decoration: none;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+    transition: background-color 0.2s ease;
+}
+
+.artwork-btn-outline:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Headings for Sections (About & Details) */
+.artwork-section-heading {
+    margin-top: 2.5rem;
+    font-size: 1.5rem;
+    /* 24px */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.artwork-about-text {
+    margin-top: 0.75rem;
+    max-width: 36rem;
+    font-size: 1.125rem;
+    /* 18px */
+    line-height: 1.75;
+    color: #d4d4d4;
+}
+
+/* Details Definition List */
+.artwork-details-dl {
+    margin-top: 1rem;
+    display: grid;
+    max-width: 36rem;
+    grid-template-columns: 8rem 1fr;
+    row-gap: 0.75rem;
+    color: #d4d4d4;
+    font-size: 0.875rem;
+}
+
+.artwork-details-dt {
+    color: #a3a3a3;
+}
+
+.artwork-details-link {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: inherit;
+    transition: color 0.2s ease;
+}
+
+.artwork-details-link:hover {
+    color: #ffffff;
+}
+
+/* Dashboard Link for Owner */
+.artwork-owner-link {
+    margin-top: 2rem;
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #ffffff;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.2s ease;
+}
+
+.artwork-owner-link:hover {
+    color: #acb2b5;
+}
+
+/* More Artworks from Same Artist Section */
+.artwork-more-section {
+    margin-top: 5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 3rem;
+}
+
+.artwork-more-grid {
+    margin-top: 2rem;
+    display: grid;
+    gap: 1.5rem;
+    list-style: none;
+    padding: 0;
+}
+
+@media (min-width: 640px) {
+    .artwork-more-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.artwork-more-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.artwork-more-canvas-box {
+    background-color: #171717;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.artwork-more-card-link:hover .artwork-more-canvas-box {
+    box-shadow: inset 0 0 0 1px rgba(233, 180, 32, 0.6);
+}
+
+.artwork-more-title {
+    margin-top: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.artwork-more-price.available {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #acb2b5;
+}
+
+.artwork-more-price.sold {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #737373;
+}

@@ -1,0 +1,146 @@
+/* ======================================================
+   ADMIN MANAGE ADMINS DIRECTORY STYLES (PURONG CSS)
+   ====================================================== */
+
+/* Main Container Space */
+.admin-admins-container {
+    max-width: 64rem;
+    /* 1024px */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* Pamagat ng Pahina */
+.admin-admins-title {
+    font-size: 1.5rem;
+    /* 24px */
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    /* 24px */
+}
+
+/* Talahanayan (Table) Container */
+.admin-admins-table-wrapper {
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    border: 1px solid #262626;
+    /* Neutral 800 */
+    background-color: #171717;
+    /* Neutral 900 */
+}
+
+.admin-admins-table {
+    width: 100%;
+    text-align: left;
+    font-size: 0.875rem;
+    color: #d4d4d4;
+    /* Neutral 300 */
+    border-collapse: collapse;
+}
+
+/* Table Header */
+.admin-admins-thead {
+    border-bottom: 1px solid #262626;
+    background-color: #0a0a0a;
+    /* Neutral 950 */
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #a3a3a3;
+    /* Neutral 400 */
+}
+
+.admin-admins-th {
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+}
+
+.admin-admins-th-right {
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* Table Body at Rows */
+.admin-admins-tbody {
+    border-top: 1px solid #262626;
+}
+
+.admin-admins-tr {
+    border-bottom: 1px solid #262626;
+    transition: background-color 0.2s ease;
+}
+
+.admin-admins-tr:hover {
+    background-color: rgba(38, 38, 38, 0.5);
+    /* Hover effect sa rows */
+}
+
+.admin-admins-td {
+    padding: 1rem 1.5rem;
+}
+
+.admin-admins-td-right {
+    padding: 1rem 1.5rem;
+    text-align: right;
+}
+
+.admin-admin-name {
+    font-weight: 500;
+    color: #ffffff;
+}
+
+.admin-admin-email {
+    color: #d4d4d4;
+}
+
+.admin-admin-date {
+    color: #d4d4d4;
+}
+
+/* (You) Badge */
+.admin-badge-you {
+    margin-left: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: rgba(245, 158, 11, 0.1);
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    color: #fbbf24;
+    /* Amber 400 */
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+/* Delete Admin Button Wrapper at Styles */
+.admin-action-form {
+    display: inline-block;
+}
+
+.btn-admin-delete {
+    border-radius: 0.25rem;
+    background-color: rgba(220, 38, 38, 0.2);
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #f87171;
+    /* Red 400 */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.btn-admin-delete:hover {
+    background-color: #dc2626;
+    color: #ffffff;
+}
+
+/* Current User Indicator Text */
+.admin-current-user-text {
+    font-size: 0.75rem;
+    color: #737373;
+    /* Neutral 500 */
+    font-style: italic;
+}

@@ -1,0 +1,117 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT STYLES IMPORT #}
+{# ========================================== #}
+{% extends "admin_layout.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_manage_admins.css') }}">
+{% endblock %}
+
+{% block title %}Manage Admins | Admin | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT PANEL #}
+{# ========================================== #}
+{% block panel %}
+<div class="admin-admins-container">
+    <h1 class="admin-admins-title">Administrators Directory</h1>
+
+    <section class="mb-8 rounded-lg bg-neutral-900 p-5 ring-1 ring-white/10">
+        <h2 class="text-lg font-semibold text-white">Add an administrator</h2>
+        <p class="mt-1 text-sm text-neutral-400">
+            Create a separate admin login. Share the temporary password securely with the new administrator.
+        </p>
+        <form action="{{ url_for('admin_manage_admins') }}" method="POST" class="mt-5 grid gap-4 sm:grid-cols-2">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <div>
+                <label for="admin-name" class="mb-1 block text-sm text-neutral-300">Full name</label>
+                <input id="admin-name" name="name" type="text" maxlength="80" minlength="2" required
+                    value="{{ form.get('name', '') }}"
+                    class="w-full rounded-md bg-neutral-950 px-3 py-2 text-sm text-white ring-1 ring-white/15 focus:outline-none focus:ring-2 focus:ring-[#acb2b5]">
+                {% if errors.get('name') %}<p class="mt-1 text-xs text-red-300">{{ errors.name }}</p>{% endif %}
+            </div>
+
+            <div>
+                <label for="admin-email" class="mb-1 block text-sm text-neutral-300">Email</label>
+                <input id="admin-email" name="email" type="email" maxlength="120" required
+                    value="{{ form.get('email', '') }}"
+                    class="w-full rounded-md bg-neutral-950 px-3 py-2 text-sm text-white ring-1 ring-white/15 focus:outline-none focus:ring-2 focus:ring-[#acb2b5]">
+                {% if errors.get('email') %}<p class="mt-1 text-xs text-red-300">{{ errors.email }}</p>{% endif %}
+            </div>
+
+            <div>
+                <label for="admin-password" class="mb-1 block text-sm text-neutral-300">Temporary password</label>
+                <input id="admin-password" name="password" type="password" minlength="8" autocomplete="new-password"
+                    required
+                    class="w-full rounded-md bg-neutral-950 px-3 py-2 text-sm text-white ring-1 ring-white/15 focus:outline-none focus:ring-2 focus:ring-[#acb2b5]">
+                {% if errors.get('password') %}<p class="mt-1 text-xs text-red-300">{{ errors.password }}</p>{% endif %}
+            </div>
+
+            <div>
+                <label for="admin-confirm" class="mb-1 block text-sm text-neutral-300">Confirm password</label>
+                <input id="admin-confirm" name="confirm" type="password" minlength="8" autocomplete="new-password"
+                    required
+                    class="w-full rounded-md bg-neutral-950 px-3 py-2 text-sm text-white ring-1 ring-white/15 focus:outline-none focus:ring-2 focus:ring-[#acb2b5]">
+                {% if errors.get('confirm') %}<p class="mt-1 text-xs text-red-300">{{ errors.confirm }}</p>{% endif %}
+            </div>
+
+            <button type="submit"
+                class="w-fit rounded-md bg-[#acb2b5] px-4 py-2 text-sm font-semibold text-neutral-950 hover:bg-[#c9ced1] sm:col-span-2">
+                Create admin account
+            </button>
+        </form>
+    </section>
+
+    <div class="admin-admins-table-wrapper">
+        <table class="admin-admins-table">
+            <thead class="admin-admins-thead">
+                <tr>
+                    <th class="admin-admins-th">Name</th>
+                    <th class="admin-admins-th">Email</th>
+                    <th class="admin-admins-th">Date Created</th>
+                    <th class="admin-admins-th-right">Action</th>
+                </tr>
+            </thead>
+            <tbody class="admin-admins-tbody">
+                {% for admin in admins %}
+                <tr class="admin-admins-tr">
+                    <td class="admin-admins-td admin-admin-name">
+                        {{ admin.name }}
+                        {% if admin.id == current_user.id %}
+                        <span class="admin-badge-you">(You)</span>
+                        {% endif %}
+                    </td>
+                    <td class="admin-admins-td admin-admin-email">{{ admin.email }}</td>
+                    <td class="admin-admins-td admin-admin-date">{{ admin.created_at|ph_time }}</td>
+                    <td class="admin-admins-td-right">
+                        {% if admin.id != current_user.id %}
+                        <form action="{{ url_for('delete_admin_account', admin_id=admin.id) }}" method="POST"
+                            onsubmit="return confirm('Are you sure you want to permanently delete this admin account?');"
+                            class="admin-action-form">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                            <button type="submit" class="btn-admin-delete">
+                                Delete Admin
+                            </button>
+                        </form>
+                        {% else %}
+                        <span class="admin-current-user-text">Current User</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{# ========================================== #}
+{# 3. JAVASCRIPT BLOCK #}
+{# ========================================== #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/admin_manage_admins.js') }}"></script>
+{% endblock %}

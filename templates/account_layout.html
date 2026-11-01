@@ -1,0 +1,136 @@
+{# ========================================== #}
+{# 1. BASE LAYOUT EXTENSION #}
+{# ========================================== #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/account_layout.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="account-container">
+  <div class="account-grid">
+
+    {# ========================================== #}
+    {# 2. SIDEBAR NAVIGATION MENU #}
+    {# ========================================== #}
+    <aside aria-label="Account menu" class="account-sidebar">
+      <nav class="account-nav">
+
+        {# ------------------------------------------ #}
+        {# A. Pagpili ng Nav Items batay sa Role #}
+        {# ------------------------------------------ #}
+
+        {# Pagpipilian para sa aprubadong artist #}
+        {% if current_user.is_admin %}
+        {% set nav_items = [
+        ('admin_dashboard', 'Admin overview'),
+        ('admin_orders', 'Orders'),
+        ('admin_artist_applications', 'Artist applications'),
+        ('notifications', 'Notifications'),
+        ('admin_manage_admins', 'Manage Admins')
+        ] %}
+
+        {% elif current_user.account_type == 'artist' and current_user.is_approved %}
+        {% set nav_items = [
+        ('dashboard', 'Artist profile'),
+        ('artworks', 'Artworks'),
+        ('orders', 'Orders'),
+        ('messages', 'Messages'),
+        ('profile', 'Profile'),
+        ('settings', 'Settings'),
+        ('privacy', 'Privacy'),
+        ('notifications', 'Notifications')
+        ] %}
+
+        {# Pagpipilian para sa hindi pa aprubadong artist #}
+        {% elif current_user.account_type == 'artist' and not current_user.is_approved %}
+        {% set nav_items = [
+        ('artist_application_status', 'Application status'),
+        ('artworks', 'Artworks'),
+        ('orders', 'Orders'),
+        ('messages', 'Messages'),
+        ('profile', 'Profile'),
+        ('settings', 'Settings'),
+        ('privacy', 'Privacy'),
+        ('notifications', 'Notifications')
+        ] %}
+
+        {# Pagpipilian para sa artist na nakatengga pa ang aplikasyon #}
+        {% elif current_user.account_type == 'artist' %}
+        {% set nav_items = [
+        ('artist_application_status', 'Application status'),
+        ('messages', 'Messages'),
+        ('settings', 'Settings')
+        ] %}
+
+        {# Pagpipilian para sa karaniwang client / buyer #}
+        {% else %}
+        {% set nav_items = [
+        ('messages', 'Messages'),
+        ('client_apply_as_artist', 'Apply as artist'),
+        ('settings', 'Settings')
+        ] %}
+        {% endif %}
+
+        {# ------------------------------------------ #}
+        {# B. Pag-loop at Pag-render ng Menu Links #}
+        {# ------------------------------------------ #}
+        {% for endpoint, label in nav_items %}
+
+        {# Naglalagay ng divider line sa ibabaw ng 'Profile' para sa aprubadong artist #}
+        {% if current_user.account_type == 'artist' and current_user.is_approved and loop.index == 5 %}
+        <hr class="account-nav-divider" />
+        {% endif %}
+
+        {# Sinusuri kung ang link na ito ang kasalukuyang binibisita ng user #}
+        {% set active = request.endpoint == endpoint %}
+
+        <a href="{{ url_for(endpoint) }}" {% if active %}aria-current="page" {% endif %}
+          class="account-nav-link {{ 'active' if active else '' }}">
+          <span>{{ label }}</span>
+
+          {# ------------------------------------------ #}
+          {# C. Notification Badges (Mga Bilang) #}
+          {# ------------------------------------------ #}
+
+          {% if endpoint == 'notifications' and unread_notifications %}
+          <span class="account-badge">
+            {{ unread_notifications }}
+          </span>
+
+          {% elif endpoint == 'messages' and unread_messages %}
+          <span class="account-badge">
+            {{ unread_messages }}
+          </span>
+
+          {% elif endpoint == 'orders' and pending_orders %}
+          <span class="account-badge">
+            {{ pending_orders }}
+          </span>
+          {% endif %}
+
+        </a>
+        {% endfor %}
+
+      </nav>
+    </aside>
+
+    {# ========================================== #}
+    {# 3. MAIN CONTENT PANEL AREA #}
+    {# ========================================== #}
+    <div class="account-panel {% block panel_width %}account-panel-max-2xl{% endblock %}">
+      {% block panel %}{% endblock %}
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/account_layout.js') }}"></script>
+{% endblock %}
