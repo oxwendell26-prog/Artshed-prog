@@ -6,7 +6,7 @@
 {# Pag-link sa ating hiwalay na CSS file para sa admin layout #}
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_layout.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_layout.css') }}?v=2">
 {% endblock %}
 
 {% block content %}

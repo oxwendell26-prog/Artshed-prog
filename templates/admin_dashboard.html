@@ -6,7 +6,7 @@
 {# Pag-link sa ating bagong hiwalay na CSS file #}
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}?v=2">
 {% endblock %}
 
 {% block title %}Admin overview | Kidapawan City Visual Artists{% endblock %}
