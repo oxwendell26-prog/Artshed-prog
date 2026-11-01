@@ -1,0 +1,138 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT TITLE #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa account_layout.html #}
+{% extends "account_layout.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/messages.css') }}">
+{% endblock %}
+
+{# Pagtatakda ng pamagat ng pahina sa tab ng browser #}
+{% block title %}Messages | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN PANEL CONTENT SECTION #}
+{# ========================================== #}
+{% block panel %}
+
+{# Pamagat at Deskripsyon ng Pahina ng Messages #}
+<h1 class="messages-title">Messages</h1>
+
+<p class="messages-subtitle">
+  {% if current_user.account_type == 'client' %}
+  Private conversations with artists.
+  {% else %}
+  Conversations with clients and other artists.
+  {% endif %}
+</p>
+
+
+{# ========================================== #}
+{# 3. LISTAHAN NG MGA USAPAN (CONVERSATIONS) #}
+{# ========================================== #}
+{% if conversations %}
+<ul class="messages-list">
+
+  {# Pag-loop sa bawat usapan o conversation #}
+  {% for conversation in conversations %}
+
+  {# Pagtukoy kung sino ang nagpadala ng hindi pa nababasang mensahe #}
+  {% set unread_sender = 'client' if current_user.id == conversation.artist_id else 'artist' %}
+
+  {# Bilang ng mga bagong mensahe na hindi pa nababasa #}
+  {% set unread = conversation.messages|selectattr('sender', 'equalto', unread_sender)|selectattr('is_read', 'equalto',
+  false)|list|length %}
+
+  {# Pinakabagong mensahe sa usapan #}
+  {% set latest = conversation.messages[-1] if conversation.messages else none %}
+
+  {# Pangalan ng kausap (peer) #}
+  {% set peer = conversation.participant_artist if current_user.id == conversation.artist_id else conversation.artist %}
+
+  <li>
+    <article class="messages-card {{ 'unread' if unread else '' }}">
+
+      {# Link patungo sa mismong detalye ng usapan o chat #}
+      <a href="{{ url_for('artist_conversation', conversation_id=conversation.id) }}" class="messages-card-link">
+        <div class="messages-card-header-row">
+
+          <div>
+            {# Pangalan ng kabilang panig (Peer o Client Name) #}
+            <h2 class="messages-peer-name">
+              {{ peer.name if conversation.participant_artist_id else conversation.client_name }}
+            </h2>
+
+            {# Detalye kung tungkol saan ang usapan o email ng client #}
+            <p class="messages-peer-sub">
+              {% if conversation.participant_artist_id %}
+              Artist-to-artist chat
+              {% else %}
+              {{ conversation.artwork_title }} · {{ conversation.client_email }}
+              {% endif %}
+            </p>
+          </div>
+
+          <div class="messages-meta-group">
+            {# Oras ng huling aktibidad sa usapan #}
+            <time class="messages-time">
+              {{ conversation.updated_at|ph_time }}
+            </time>
+
+            {# Badge kung may bagong mensahe#}
+            {% if unread %}
+            <span class="messages-unread-badge">
+              {{ unread }} new
+            </span>
+            {% endif %}
+          </div>
+
+        </div>
+
+        {# Preview ng huling mensahe #}
+        {% if latest %}
+        <p class="messages-latest-preview">
+          {{ latest.body }}
+        </p>
+        {% endif %}
+      </a>
+
+
+      {# ========================================== #}
+      {# 4. DELETE CONVERSATION FORM #}
+      {# ========================================== #}
+      {# Form para mabura ang buong usapan #}
+      <form method="post" action="{{ url_for('delete_conversation', conversation_id=conversation.id) }}"
+        class="messages-delete-form"
+        onsubmit="return confirm('Delete this conversation and all its messages? This cannot be undone.');">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <button type="submit" class="messages-delete-btn">
+          Delete
+        </button>
+      </form>
+
+    </article>
+  </li>
+  {% endfor %}
+</ul>
+
+{# Mensahe kung wala pang mga usapan #}
+{% else %}
+<p class="messages-empty-notice">
+  {% if current_user.account_type == 'client' %}
+  No conversations yet. Visit an artist or artwork page to start a conversation.
+  {% else %}
+  No conversations yet. When a client messages you or you chat with another artist, the conversation will appear here.
+  {% endif %}
+</p>
+{% endif %}
+
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/messages.js') }}"></script>
+{% endblock %}

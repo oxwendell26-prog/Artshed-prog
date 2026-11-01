@@ -1,0 +1,149 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT DYNAMIC TITLE #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa base.html #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/conversation.css') }}">
+{% endblock %}
+
+{# Pagtatakda ng pamagat ng pahina batay sa kung chat ito sa kapwa artist o tungkol sa artwork #}
+{% block title %}
+{% if conversation.participant_artist_id %}
+Artist chat |
+{% else %}
+Conversation about {{ conversation.artwork_title }} |
+{% endif %} Kidapawan City Visual Artists
+{% endblock %}
+
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="chat-section">
+
+  {# ------------------------------------------ #}
+  {# A. Navigation Back Link #}
+  {# ------------------------------------------ #}
+  {# Link pabalik sa Messages kung Artist View, o pabalik sa Artwork Details kung Client View #}
+  {% if artist_view %}
+  <a href="{{ url_for('messages') }}" class="chat-back-link">
+    Back to messages
+  </a>
+  {% else %}
+  <a href="{{ url_for('artwork_detail', artwork_id=conversation.artwork_id) if conversation.artwork_id else url_for('artworks') }}"
+    class="chat-back-link">
+    Back to artworks
+  </a>
+  {% endif %}
+
+
+  {# ------------------------------------------ #}
+  {# B. Header at Deskripsyon ng Usapan #}
+  {# ------------------------------------------ #}
+  <h1 class="chat-title">
+    Conversation
+  </h1>
+
+  <p class="chat-subtitle">
+    {% if conversation.participant_artist_id %}
+    Chat with
+    <span class="chat-subtitle-highlight">
+      {{ conversation.participant_artist.name if current_user.id == conversation.artist_id else conversation.artist.name
+      }}
+    </span>
+    {% else %}
+    About <span class="chat-subtitle-highlight">{{ conversation.artwork_title }}</span>
+    {% if artist_view %}
+    · with {{ conversation.client_name }} ({{ conversation.client_email }})
+    {% else %}
+    · with {{ conversation.artist.name }}
+    {% endif %}
+    {% endif %}
+  </p>
+
+
+  {# ------------------------------------------ #}
+  {# C. Opsyonal na Delete / Private Link Notice#}
+  {# ------------------------------------------ #}
+  {# Button para sa Artist upang mabura ang usapan #}
+  {% if artist_view %}
+  <form method="post" action="{{ url_for('delete_conversation', conversation_id=conversation.id) }}"
+    class="chat-delete-form"
+    onsubmit="return confirm('Delete this conversation and all its messages? This cannot be undone.');">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <button type="submit" class="chat-delete-btn">
+      Delete conversation
+    </button>
+  </form>
+  {% endif %}
+
+  {# Paalala sa Client na i-save ang private link ng usapan #}
+  {% if not artist_view %}
+  <p class="chat-private-banner">
+    This is your private conversation link. Save it to return later; replies are not emailed.
+  </p>
+  {% endif %}
+
+
+  {# ========================================== #}
+  {# 3. LISTAHAN NG MGA MENSAHE (CHAT BUBBLES) #}
+  {# ========================================== #}
+  <ol class="chat-messages-list" aria-label="Messages">
+    {% for message in conversation.messages %}
+
+    {# Pag-alam kung ang kasalukuyang mensahe ay galing sa mismong viewer (own message) #}
+    {% set own_message = (message.sender == viewer_sender) if artist_view else (message.sender == 'client') %}
+
+    <li class="chat-message-row {{ 'own' if own_message else 'other' }}">
+      <article class="chat-bubble {{ 'own' if own_message else 'other' }}">
+
+        {# Nagpapadala ng Mensahe (Pangalan o 'You') #}
+        <p class="chat-bubble-sender">
+          {{ 'You' if own_message else (conversation.artist.name if message.sender == 'artist' else
+          (conversation.participant_artist.name if conversation.participant_artist_id else conversation.client_name)) }}
+        </p>
+
+        {# Laman ng Mensahe #}
+        <p class="chat-bubble-text">{{ message.body }}</p>
+
+        {# Oras ng Pagkakatanggap/Pagpapadala #}
+        <time class="chat-bubble-time">
+          {{ message.created_at|ph_time }}
+        </time>
+      </article>
+    </li>
+
+    {% endfor %}
+  </ol>
+
+
+  {# ========================================== #}
+  {# 4. FORM PARA SA PAGTUTUGON (REPLY FORM) #}
+  {# ========================================== #}
+  <form method="post" class="chat-reply-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    <label for="message" class="chat-reply-label">
+      Your reply
+    </label>
+
+    <textarea id="message" name="message" rows="4" maxlength="2000" required class="chat-reply-textarea"></textarea>
+
+    <button type="submit" class="chat-send-btn">
+      Send reply
+    </button>
+  </form>
+
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/conversation.js') }}"></script>
+{% endblock %}

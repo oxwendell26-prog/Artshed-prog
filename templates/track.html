@@ -1,0 +1,62 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa base.html at inaangkat ang field macro #}
+{% extends "base.html" %}
+{% from "macros.html" import field %}
+
+{# Pagtatakda ng pamagat ng pahina sa tab ng browser #}
+{% block title %}Track your order | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="mx-auto max-w-md px-5 py-16 sm:py-24">
+
+  {# Pamagat at Deskripsyon ng Pahina #}
+  <h1 class="font-display text-3xl text-white">Track your order</h1>
+
+  <p class="mt-2 text-neutral-400">
+    {% if current_user.is_admin %}
+    Enter an order number to view its status. Admin accounts can access any order.
+    {% else %}
+    Sign in with the client account used at checkout, then enter your order number. You can only view orders linked to
+    your account.
+    {% endif %}
+  </p>
+
+
+  {# ========================================== #}
+  {# 3. TRACK ORDER FORM WITH HOVER EFFECTS #}
+  {# ========================================== #}
+  <form method="post"
+    class="mt-8 space-y-5 rounded-lg bg-neutral-900 p-6 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:ring-[#acb2b5]/40 hover:shadow-[0_12px_30px_rgba(0,0,0,0.6),0_0_20px_rgba(172,178,181,0.12)]">
+    {# CSRF Token para sa seguridad laban sa Cross-Site Request Forgery #}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    {# Input field para sa numero ng order gamit ang field macro #}
+    {{ field('order_number', 'Order number', 'text', form.get('order_number',''), True, 'off', 'Shown on your order
+    page, for example #12.') }}
+
+    {# Submit Button na may Lift at Scale Effect sa Hover #}
+    <button
+      class="w-full rounded-sm bg-[#acb2b5] px-6 py-3 font-semibold text-neutral-950 transition-all duration-200 hover:bg-[#c9ced1] hover:scale-[1.01] active:scale-95 shadow-md hover:shadow-[0_0_20px_rgba(172,178,181,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+      {% if current_user.is_admin %}Find order{% else %}Find my order{% endif %}
+    </button>
+  </form>
+
+
+  {# ========================================== #}
+  {# 4. FOOTER LINK (BROWSE ARTWORKS) #}
+  {# ========================================== #}
+  <p class="mt-6 text-sm text-neutral-400">
+    Looking to buy?
+    <a href="{{ url_for('artworks') }}"
+      class="text-white underline underline-offset-4 transition-colors duration-200 hover:text-brass">
+      Browse artworks &rarr;
+    </a>
+  </p>
+
+</section>
+{% endblock %}

@@ -1,0 +1,122 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT TITLE #}
+{# ========================================== #}
+{% extends "account_layout.html" %}
+
+{# Pag-link sa Cropper.js CSS at sa ating hiwalay na profile CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block title %}Edit Profile | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN PANEL CONTENT SECTION #}
+{# ========================================== #}
+{% block panel %}
+<div class="profile-container">
+  <a href="{{ url_for('dashboard') }}" class="profile-back-link">&larr; Back to dashboard</a>
+  <h1 class="profile-title">Edit Profile</h1>
+
+  <!-- Cover Photo Section -->
+  <div class="profile-cover-wrapper"
+    onclick="{% if current_user.cover_photo %}openFullscreen('{{ url_for('static', filename='uploads/' ~ current_user.cover_photo) }}'){% endif %}">
+    {% if current_user.cover_photo %}
+    <img src="{{ url_for('static', filename='uploads/' ~ current_user.cover_photo) }}" class="profile-cover-img"
+      alt="Cover Photo">
+    {% endif %}
+    <button type="button" class="profile-cover-btn" onclick="openCropper('cover'); event.stopPropagation();">Upload
+      Cover Photo</button>
+  </div>
+
+  <!-- Profile Picture / Avatar Section -->
+  <div class="profile-avatar-section"
+    onclick="{% if current_user.avatar %}openFullscreen('{{ url_for('static', filename='uploads/' ~ current_user.avatar) }}'){% endif %}">
+    {% if current_user.avatar %}
+    <img src="{{ url_for('static', filename='uploads/' ~ current_user.avatar) }}" class="profile-avatar-img"
+      alt="Avatar">
+    {% else %}
+    <div class="profile-avatar-initials">
+      {{ current_user.initials }}
+    </div>
+    {% endif %}
+    <button type="button" class="profile-avatar-btn"
+      onclick="openCropper('avatar'); event.stopPropagation();">Change</button>
+  </div>
+
+  <!-- Main Profile Details Form -->
+  <form method="post" class="profile-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    <div class="profile-form-group">
+      <label class="profile-form-label">Full Name</label>
+      <input type="text" name="name" value="{{ form.get('name', '') }}" required class="profile-form-control">
+    </div>
+
+    <div class="profile-form-group">
+      <label class="profile-form-label">Age</label>
+      <input type="number" name="age" value="{{ form.get('age', '') }}" class="profile-form-control">
+    </div>
+
+    <div class="profile-form-group">
+      <label class="profile-form-label">Address / Location</label>
+      <input type="text" name="address" value="{{ form.get('address', '') }}" class="profile-form-control">
+    </div>
+
+    <div class="profile-form-group">
+      <label class="profile-form-label">Art Style / Focus</label>
+      <input type="text" name="art_style" value="{{ form.get('art_style', '') }}" class="profile-form-control">
+    </div>
+
+    <div class="profile-form-group">
+      <label class="profile-form-label">Experience</label>
+      <input type="text" name="experience" value="{{ form.get('experience', '') }}" class="profile-form-control">
+    </div>
+
+    <div class="profile-form-group">
+      <label class="profile-form-label">Achievements</label>
+      <textarea name="achievements" rows="3" class="profile-form-control">{{ form.get('achievements', '') }}</textarea>
+    </div>
+
+    <div class="profile-form-group">
+      <label class="profile-form-label">Bio</label>
+      <textarea name="bio" rows="4" class="profile-form-control">{{ form.get('bio', '') }}</textarea>
+    </div>
+
+    <button type="submit" class="profile-btn-save">Save Profile Details</button>
+  </form>
+</div>
+
+<!-- Crop Modal Popup -->
+<div id="cropperModal" class="profile-modal-overlay">
+  <div class="profile-modal-box">
+    <h3 style="margin: 0; color: #fff;" id="modalTitle">Crop Image</h3>
+    <div class="profile-modal-image-container">
+      <img id="imageToCrop" src="">
+    </div>
+    <div class="profile-modal-actions">
+      <button type="button" class="profile-btn-modal-cancel" onclick="closeCropper()">Cancel</button>
+      <button type="button" class="profile-btn-modal-save" id="cropAndUploadBtn">Crop & Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fullscreen Image View Modal -->
+<div id="fullscreenModal" class="profile-fullscreen-modal" onclick="closeFullscreen()">
+  <button type="button" class="profile-fullscreen-close" onclick="closeFullscreen()">&times;</button>
+  <img id="fullscreenImg" src="">
+</div>
+{% endblock %}
+
+{# Pag-link sa Cropper.js library scripts at sa ating hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+<script>
+  window.uploadCroppedImageEndpoint = "{{ url_for('upload_cropped_image') }}";
+  window.profileCsrfToken = "{{ csrf_token() }}";
+</script>
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+{% endblock %}

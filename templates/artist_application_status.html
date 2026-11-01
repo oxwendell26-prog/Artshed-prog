@@ -1,0 +1,73 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT TITLE #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa base.html #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/artist_application_status.css') }}">
+{% endblock %}
+
+{# Pagtatakda ng pamagat ng pahina sa tab ng browser #}
+{% block title %}Artist application | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="artist-status-section">
+
+  {# Kategorya o subtitle ng pahina #}
+  <p class="artist-status-tag">
+    Artist account
+  </p>
+
+  {# Pangunahing pamagat ng aplikasyon #}
+  <h1 class="artist-status-title">
+    Application submitted
+  </h1>
+
+  {# ========================================== #}
+  {# 3. STATUS MESSAGE CARD #}
+  {# ========================================== #}
+  {# Kahon na nagpapabatid na naghihihintay pa ng pagsusuri ng admin ang aplikasyon #}
+  <div class="artist-status-card">
+    <p class="artist-status-card-heading">
+      Your application is waiting for admin review.
+    </p>
+
+    <p class="artist-status-card-text">
+      You can browse the gallery, use Messages, and join the community while it is pending. Artist tools, posting, and
+      artwork uploads will be available after approval.
+    </p>
+  </div>
+
+
+  {# ========================================== #}
+  {# 4. ACTION BUTTONS (NAVIGATION LINKS) #}
+  {# ========================================== #}
+  {# Mga pindutan para mag-browse ng artworks o sumali sa community habang naka-pending #}
+  <div class="artist-status-actions">
+
+    {# Link para pumunta sa gallery ng mga sining #}
+    <a href="{{ url_for('artworks') }}" class="artist-status-btn">
+      Browse artworks
+    </a>
+
+    {# Link para pumunta sa community feed #}
+    <a href="{{ url_for('community') }}" class="artist-status-btn">
+      Community
+    </a>
+
+  </div>
+
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/artist_application_status.js') }}"></script>
+{% endblock %}

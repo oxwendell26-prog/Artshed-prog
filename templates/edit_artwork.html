@@ -1,0 +1,152 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa account_layout.html #}
+{% extends "account_layout.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_artwork.css') }}">
+{% endblock %}
+
+{# Inaangkat ang canvas macro para sa preview ng larawan ng sining #}
+{% from "macros.html" import canvas %}
+
+{# Pagtatakda ng pamagat ng pahina sa tab ng browser gamit ang pamagat ng painting #}
+{% block title %}Edit {{ artwork.title }} | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN PANEL CONTENT SECTION #}
+{# ========================================== #}
+{% block panel %}
+
+{# Link pabalik sa My Artworks page #}
+<a href="{{ url_for('my_artworks') }}" class="edit-art-back-link">
+  Back to my artworks
+</a>
+
+<h1 class="edit-art-title">
+  Edit painting
+</h1>
+
+<p class="edit-art-subtitle">
+  Update the details shown to visitors in your gallery.
+</p>
+
+
+{# ========================================== #}
+{# 3. RESERVED ORDER WARNING NOTICE #}
+{# ========================================== #}
+{% if artwork.reserved %}
+<p class="edit-art-warning-banner">
+  This painting has an active order. Its price and availability are locked until the order is completed or declined; you
+  can still update its other details.
+</p>
+{% endif %}
+
+
+{# ========================================== #}
+{# 4. EDIT ARTWORK FORM #}
+{# ========================================== #}
+<form method="post" enctype="multipart/form-data" class="edit-art-form">
+  {# CSRF Token para sa seguridad #}
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+  {# A. Input Field para sa Pamagat (Title) #}
+  <div class="edit-art-field-group">
+    <label for="title" class="edit-art-label">Title</label>
+    <input id="title" name="title" type="text" maxlength="120" required value="{{ artwork.title }}"
+      class="edit-art-input" />
+  </div>
+
+
+  {# B. Grid para sa Taon (Year) at Sukat (Size) #}
+  <div class="edit-art-grid-2">
+
+    {# Year Field #}
+    <div class="edit-art-field-group">
+      <label for="year" class="edit-art-label">Year</label>
+      <input id="year" name="year" type="number" min="1900" max="{{ now_year + 1 }}" required value="{{ artwork.year }}"
+        class="edit-art-input" />
+    </div>
+
+    {# Size Field #}
+    <div class="edit-art-field-group">
+      <label for="size" class="edit-art-label">Size</label>
+      <input id="size" name="size" type="text" maxlength="60" value="{{ artwork.size or '' }}"
+        placeholder="e.g. 24 x 36 in" class="edit-art-input" />
+    </div>
+
+  </div>
+
+
+  {# C. Input Field para sa Presyo (Price) #}
+  <div class="edit-art-field-group">
+    <label for="price" class="edit-art-label">
+      Price (₱)
+    </label>
+    <input id="price" name="price" type="number" min="1" max="100000000" step="1" value="{{ artwork.price or '' }}"
+      placeholder="Leave blank for price on request" {% if artwork.reserved %}disabled{% endif %}
+      class="edit-art-input" />
+  </div>
+
+
+  {# D. Textarea para sa Deskripsyon o Note #}
+  <div class="edit-art-field-group">
+    <label for="note" class="edit-art-label">
+      Description
+    </label>
+    <textarea id="note" name="note" rows="4" maxlength="300"
+      class="edit-art-textarea">{{ artwork.note or '' }}</textarea>
+  </div>
+
+
+  {# E. Pinalitan ang Larawan ng Sining (Replace Image) #}
+  <div class="edit-art-field-group">
+    <label for="image" class="edit-art-label">
+      Replace painting image (optional)
+    </label>
+
+    {# Kasalukuyang Canvas Preview #}
+    <div class="edit-art-preview-box">
+      {{ canvas(artwork, 'aspect-[4/3]') }}
+    </div>
+
+    {# File Input para sa Bagong Larawan #}
+    <input id="image" name="image" type="file" accept=".jpg,.jpeg,.png,.webp" class="edit-art-file-input" />
+
+    <p class="edit-art-file-help">
+      JPG, PNG, or WEBP, up to 5 MB. Leave empty to keep the current image.
+    </p>
+  </div>
+
+
+  {# F. Checkbox para sa Availability Status #}
+  <label class="edit-art-checkbox-label">
+    <input type="checkbox" name="available" value="1" {% if artwork.available %}checked{% endif %} {% if
+      artwork.reserved %}disabled{% endif %} class="edit-art-checkbox" />
+    Still available for purchase
+  </label>
+
+
+  {# G. Action Buttons (Save Changes & Cancel) #}
+  <div class="edit-art-btn-group">
+    <button type="submit" class="edit-art-submit-btn">
+      Save changes
+    </button>
+
+    <a href="{{ url_for('my_artworks') }}" class="edit-art-cancel-btn">
+      Cancel
+    </a>
+  </div>
+
+</form>
+
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/edit_artwork.js') }}"></script>
+{% endblock %}

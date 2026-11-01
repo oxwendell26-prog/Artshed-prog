@@ -1,0 +1,329 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/community.css') }}">
+{% endblock %}
+
+{% from "macros.html" import avatar %}
+
+{% block title %}Community | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+
+<!-- Fullscreen Image Lightbox Modal -->
+<div id="imageViewerModal" class="community-modal-overlay hidden" onclick="closeImageViewer(event)">
+  <button type="button" onclick="closeImageViewer(event)" class="community-lightbox-close">&times;</button>
+  <img id="fullSizeImage" src="" class="community-lightbox-img" onclick="event.stopPropagation()">
+</div>
+
+<!-- Edit Post Modal -->
+<div id="editPostModal" class="community-dialog-overlay hidden">
+  <div class="community-dialog-box" onclick="event.stopPropagation()">
+    <div class="community-dialog-header">
+      <h3 class="community-dialog-title">Edit Post</h3>
+      <button type="button" onclick="closeEditModal(event)" class="community-close-btn">✕</button>
+    </div>
+
+    <form id="editPostForm" method="POST" enctype="multipart/form-data" class="space-y-4"
+      onsubmit="submitEditPost(event)">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <div>
+        <label class="block text-xs font-medium text-neutral-300 mb-1">Caption</label>
+        <textarea id="editCaption" name="caption" rows="4" maxlength="1000"
+          class="community-caption-textarea"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-xs font-medium text-neutral-400 mb-1">Replace Image or Video (Optional)</label>
+        <input type="file" name="media" accept="image/*,video/*" class="community-file-input" />
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeEditModal(event)" class="community-btn-cancel"
+          style="padding: 0.5rem 1rem; font-size: 0.75rem;">Cancel</button>
+        <button type="submit" class="community-btn-share" style="padding: 0.5rem 1rem; font-size: 0.75rem;">Save
+          Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Comment Modal -->
+<div id="editCommentModal" class="community-dialog-overlay hidden">
+  <div class="community-dialog-box" style="max-width: 28rem;" onclick="event.stopPropagation()">
+    <div class="community-dialog-header">
+      <h3 class="community-dialog-title">Edit Comment</h3>
+      <button type="button" onclick="closeEditCommentModal()" class="community-close-btn">✕</button>
+    </div>
+
+    <form id="editCommentForm" method="POST" class="space-y-4">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <div>
+        <textarea id="editCommentContent" name="content" rows="3" maxlength="500" required
+          class="community-caption-textarea"></textarea>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="closeEditCommentModal()" class="community-btn-cancel"
+          style="padding: 0.5rem 1rem; font-size: 0.75rem;">Cancel</button>
+        <button type="submit" class="community-btn-share"
+          style="padding: 0.5rem 1rem; font-size: 0.75rem;">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<section class="community-section">
+
+  <header class="community-header">
+    <p class="community-tag">
+      Artist community
+    </p>
+
+    <h1 id="community-heading" tabindex="-1" class="community-title focus:outline-none">
+      Community feed
+    </h1>
+
+    <p class="community-subtitle">
+      Discover works in progress, finished paintings, and moments from local artists.
+    </p>
+  </header>
+
+  <div id="community-feed">
+
+    {# Create Post Form (For Approved Artists) #}
+    {% if current_user.is_authenticated and current_user.account_type == 'artist' and current_user.is_approved %}
+    <form method="post" action="{{ url_for('create_post') }}" enctype="multipart/form-data"
+      class="community-post-form-card">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <div class="community-form-author-row">
+        {{ avatar(current_user, 'h-10 w-10', 'text-sm') }}
+        <div>
+          <p class="community-author-name">{{ current_user.name }}</p>
+          <p class="community-author-sub">Share with the community</p>
+        </div>
+      </div>
+
+      <label for="caption" class="sr-only">Caption</label>
+      <textarea id="caption" name="caption" rows="3" maxlength="1000" placeholder="What are you creating today?"
+        class="community-caption-textarea"></textarea>
+
+      <div class="community-form-footer">
+        <div>
+          <label for="media" class="community-file-label">
+            Add a photo or video
+          </label>
+
+          <input id="media" name="media" type="file"
+            accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,.jpg,.jpeg,.png,.webp,.mp4,.webm"
+            class="community-file-input" />
+
+          <p class="community-file-help">
+            JPG, PNG, WEBP, MP4, or WEBM · max 5 MB
+          </p>
+        </div>
+
+        <div class="community-form-btn-group">
+          <button type="reset" class="community-btn-cancel">
+            Cancel post
+          </button>
+
+          <button type="submit" class="community-btn-share">
+            Share post
+          </button>
+        </div>
+      </div>
+    </form>
+
+    {% elif current_user.is_authenticated and current_user.account_type == 'artist' %}
+    <aside class="community-aside-notice">
+      Your artist application is pending. You can browse and join the conversation, but posting will be available after
+      approval.
+      <a href="{{ url_for('artist_application_status') }}" class="community-aside-link">
+        Application status
+      </a>
+    </aside>
+
+    {% elif current_user.is_authenticated %}
+    <aside class="community-aside-plain">
+      Signed in as <span class="font-medium text-white">{{ current_user.name }}</span>. You can like and comment on
+      community posts.
+    </aside>
+
+    {% else %}
+    <aside class="community-aside-plain">
+      <a href="{{ url_for('login') }}" class="community-aside-link" style="margin-left: 0;">Log in</a> or <a
+        href="{{ url_for('client_register') }}" class="community-aside-link">sign up</a> to join the community
+      conversation.
+    </aside>
+    {% endif %}
+
+    {# List of Posts #}
+    {% if posts %}
+    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+      {% for post in posts %}
+      <article id="post-article-{{ post.id }}" class="community-post-article">
+
+        <div class="community-post-top-row">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <a href="{{ url_for('artist_detail', artist_id=post.artist.id) }}" style="transition: transform 0.3s ease;">
+              {{ avatar(post.artist, 'h-10 w-10', 'text-sm') }}
+            </a>
+            <div>
+              <a href="{{ url_for('artist_detail', artist_id=post.artist.id) }}" class="community-post-author-link">
+                {{ post.artist.name }}
+              </a>
+              <p class="community-post-time">{{ post.timestamp|ph_time }}</p>
+            </div>
+          </div>
+
+          {% if current_user.is_authenticated and post.user_id == current_user.id %}
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <button type="button" data-post-id="{{ post.id }}" data-caption="{{ post.caption or '' }}"
+              onclick="openEditModalFromBtn(event, this)" class="community-post-action-btn-edit">
+              Edit
+            </button>
+            <button type="button"
+              onclick="deletePostAjax('{{ post.id }}', '{{ url_for('delete_post', post_id=post.id) }}', '{{ csrf_token() }}')"
+              class="community-post-action-btn-delete">
+              Delete
+            </button>
+          </div>
+          {% endif %}
+        </div>
+
+        {# Caption ng Post #}
+        <div id="post-caption-container-{{ post.id }}">
+          {% if post.caption %}
+          <p id="post-caption-text-{{ post.id }}" class="community-post-caption">
+            {{ post.caption }}
+          </p>
+          {% endif %}
+        </div>
+
+        {# Media Display #}
+        <div id="post-media-container-{{ post.id }}">
+          {% if post.media_path %}
+          <div class="community-media-wrapper">
+            {% if post.media_type == 'video' %}
+            <video controls class="community-media-video">
+              <source src="{{ url_for('static', filename='uploads/' ~ post.media_path) }}" />
+              Your browser does not support the video tag.
+            </video>
+            {% else %}
+            <img src="{{ url_for('static', filename='uploads/' ~ post.media_path) }}" alt="Community post media"
+              class="community-media-img"
+              onclick="openImageViewer(event, '{{ url_for('static', filename='uploads/' ~ post.media_path) }}')" />
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+
+        {# Reactions Section (Like & Heart) #}
+        {% set likes = post.likes if post.likes is defined else [] %}
+        {% set user_reaction = namespace(type=None) %}
+        {% set like_count = 0 %}
+        {% set heart_count = 0 %}
+
+        {% for l in likes %}
+        {% if l.reaction_type == 'like' %}{% set like_count = like_count + 1 %}{% endif %}
+        {% if l.reaction_type == 'heart' %}{% set heart_count = heart_count + 1 %}{% endif %}
+        {% if current_user.is_authenticated and l.user_id == current_user.id %}
+        {% set user_reaction.type = l.reaction_type %}
+        {% endif %}
+        {% endfor %}
+
+        <div class="community-reactions-bar">
+          {% if current_user.is_authenticated %}
+          <button type="button"
+            onclick="reactPostAjax(event, '{{ post.id }}', 'like', '{{ url_for('react_post', post_id=post.id, reaction_type='like') }}', '{{ csrf_token() }}')"
+            id="btn-like-{{ post.id }}"
+            class="community-reaction-btn {{ 'liked' if user_reaction.type == 'like' else '' }}">
+            👍 Like <span id="count-like-{{ post.id }}" style="font-size: 0.75rem;">({{ like_count }})</span>
+          </button>
+
+          <button type="button"
+            onclick="reactPostAjax(event, '{{ post.id }}', 'heart', '{{ url_for('react_post', post_id=post.id, reaction_type='heart') }}', '{{ csrf_token() }}')"
+            id="btn-heart-{{ post.id }}"
+            class="community-reaction-btn {{ 'hearted' if user_reaction.type == 'heart' else '' }}">
+            ❤️ Heart <span id="count-heart-{{ post.id }}" style="font-size: 0.75rem;">({{ heart_count }})</span>
+          </button>
+          {% else %}
+          <span>👍 Like ({{ like_count }})</span>
+          <span>❤️ Heart ({{ heart_count }})</span>
+          {% endif %}
+        </div>
+
+        {# Comments Section #}
+        <div class="community-comments-section">
+          <h4 class="community-comments-heading">Comments</h4>
+
+          <div id="comments-list-{{ post.id }}" class="community-comments-list">
+            {% if post.comments %}
+            {% for comment in post.comments %}
+            <div id="comment-item-{{ comment.id }}" class="community-comment-item">
+              <div style="display: flex; align-items: flex-start; gap: 0.625rem;">
+                {{ avatar(comment.user, 'h-7 w-7', 'text-xs') }}
+                <div>
+                  <span class="community-comment-username">{{ comment.user.name }}</span>
+                  <p class="community-comment-content">{{ comment.content }}</p>
+                </div>
+              </div>
+
+              {% if current_user.is_authenticated and comment.user_id == current_user.id %}
+              <div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.75rem; flex-shrink: 0;">
+                <button type="button"
+                  onclick="openEditCommentModal('{{ comment.id }}', {{ comment.content | tojson | safe }})"
+                  class="community-comment-btn-edit">Edit</button>
+                <button type="button"
+                  onclick="deleteCommentAjax('{{ comment.id }}', '{{ url_for('delete_comment', comment_id=comment.id) }}', '{{ csrf_token() }}')"
+                  class="community-comment-btn-delete">
+                  Delete
+                </button>
+              </div>
+              {% endif %}
+            </div>
+            {% endfor %}
+            {% endif %}
+          </div>
+
+          {# Comment Creation Input #}
+          {% if current_user.is_authenticated %}
+          <form onsubmit="addCommentAjax(event, '{{ post.id }}', '{{ url_for('add_comment', post_id=post.id) }}')"
+            class="community-comment-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <input type="text" id="comment-input-{{ post.id }}" name="content" placeholder="Write a comment..."
+              maxlength="500" required class="community-comment-input" />
+            <button type="submit" class="community-comment-submit-btn">Post</button>
+          </form>
+          {% endif %}
+        </div>
+
+      </article>
+      {% endfor %}
+    </div>
+
+    {% else %}
+    <p id="no-posts-message" class="community-empty-notice">
+      No community posts yet. Be the first artist to share an update!
+    </p>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/community.js') }}"></script>
+{% endblock %}

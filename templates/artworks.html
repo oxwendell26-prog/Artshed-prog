@@ -1,0 +1,109 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{% extends "base.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/artworks.css') }}">
+{% endblock %}
+
+{% from "macros.html" import canvas, status_badge %}
+
+{% block title %}Artworks Gallery | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="artworks-section">
+
+  {# ------------------------------------------ #}
+  {# A. Header at Deskripsyon #}
+  {# ------------------------------------------ #}
+  <header class="artworks-header">
+    <p class="artworks-tag">
+      Gallery collection
+    </p>
+
+    <h1 class="artworks-title">
+      Explore artworks
+    </h1>
+
+    <p class="artworks-subtitle">
+      Browse original paintings and masterpieces created by visual artists from Kidapawan City. Filter by style,
+      subject, or medium.
+    </p>
+  </header>
+
+
+  {# ------------------------------------------ #}
+  {# B. Category Filter Links #}
+  {# ------------------------------------------ #}
+  <div class="artworks-filters">
+    {# Halimbawa ng mga filter tabs (Maaari mong isaayos depende sa iyong mga kategorya) #}
+    <div class="filter-group">
+      <span class="filter-label">Style:</span>
+      <a href="{{ url_for('artworks', subject=current_subject, medium=current_medium) }}"
+        class="filter-chip {% if not current_style %}active{% endif %}">All Styles</a>
+      <a href="{{ url_for('artworks', style='figurative', subject=current_subject, medium=current_medium) }}"
+        class="filter-chip {% if current_style == 'figurative' %}active{% endif %}">Figurative</a>
+      <a href="{{ url_for('artworks', style='abstract', subject=current_subject, medium=current_medium) }}"
+        class="filter-chip {% if current_style == 'abstract' %}active{% endif %}">Abstract</a>
+    </div>
+  </div>
+
+
+  {# ------------------------------------------ #}
+  {# C. Artworks Grid o Empty Notice #}
+  {# ------------------------------------------ #}
+  {% if paintings %}
+  <ul class="artworks-grid">
+    {% for painting in paintings %}
+    <li>
+      <article class="artwork-card">
+        <a href="{{ url_for('artwork_detail', artwork_id=painting.id) }}" class="artwork-card-link">
+          <div class="artwork-card-image-wrap">
+            <div class="artwork-card-image-inner">
+              {{ canvas(painting, 'aspect-[4/5]') }}
+            </div>
+          </div>
+
+          <div class="artwork-card-body">
+            <div class="artwork-card-header-row">
+              <h3 class="artwork-card-title">
+                {{ painting.title }}
+              </h3>
+              {{ status_badge(painting) }}
+            </div>
+
+            <p class="artwork-card-artist">
+              {{ painting.artist.name }}
+            </p>
+
+            <p class="artwork-card-price">
+              {{ painting.price_label }}
+            </p>
+          </div>
+        </a>
+      </article>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {# Mensahe sa Ingles kapag walang laman ang kategorya #}
+  {% else %}
+  <div class="artworks-empty-container" style="text-align: center; padding: 4rem 1rem;">
+    <p class="artworks-empty-notice" style="font-size: 1.1rem; color: #acb2b5;">
+      No painting uploads found in this category yet.
+    </p>
+  </div>
+  {% endif %}
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/artworks.js') }}"></script>
+{% endblock %}

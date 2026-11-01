@@ -1,0 +1,91 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa account_layout.html at inaangkat ang field macro #}
+{% extends "account_layout.html" %}
+{% from "macros.html" import field %}
+
+{# Pagtatakda ng pamagat ng pahina sa tab ng browser #}
+{% block title %}Settings | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN PANEL CONTENT SECTION #}
+{# ========================================== #}
+{% block panel %}
+
+{# Pamagat at Deskripsyon ng Pahina ng Settings #}
+<h1 class="font-display text-3xl text-white sm:text-4xl">Settings</h1>
+<p class="mt-2 text-neutral-400">Manage how you sign in to your account.</p>
+
+
+{# ========================================== #}
+{# 3. UPDATE EMAIL FORM #}
+{# ========================================== #}
+{# Pormularyo para sa pagpapalit ng email address ng user #}
+<form method="post" class="mt-8 space-y-5 rounded-lg bg-neutral-900 p-6 ring-1 ring-white/10">
+  {# CSRF Token para sa seguridad laban sa Cross-Site Request Forgery #}
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+  {# Action identifier para malaman ng backend na email ang ina-update #}
+  <input type="hidden" name="action" value="email" />
+
+  <div>
+    <h2 class="font-display text-xl text-white">Email address</h2>
+
+    {# Pagpapakita ng kasalukuyang email address #}
+    <p class="mt-1 text-sm text-neutral-400">
+      Your current email is
+      <span class="text-white">{{ current_user.email }}</span>. It is never shown on the site.
+    </p>
+  </div>
+
+  {# Field para sa bagong email #}
+  {{ field('new_email', 'New email', 'email', form.get('new_email','') if form.get('action') == 'email' else '', True,
+  'email', '', errors.get('new_email','')) }}
+
+  {# Field para sa kasalukuyang password upang kumpirmahin ang pagbabago #}
+  {{ field('email_password', 'Current password', 'password', '', True, 'current-password', 'Enter your password to
+  confirm the change.', errors.get('email_password','')) }}
+
+  {# Submit button para sa pag-update ng email #}
+  <button
+    class="rounded-sm bg-[#acb2b5] px-5 py-2.5 font-semibold text-neutral-950 transition-all duration-200 hover:bg-[#c9ced1] hover:scale-[1.01] active:scale-95 shadow-md hover:shadow-[0_0_20px_rgba(172,178,181,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+    Update email
+  </button>
+</form>
+
+
+{# ========================================== #}
+{# 4. CHANGE PASSWORD FORM #}
+{# ========================================== #}
+{# Pormularyo para sa pagpapalit ng password ng user #}
+<form method="post" class="mt-6 space-y-5 rounded-lg bg-neutral-900 p-6 ring-1 ring-white/10">
+  {# CSRF Token para sa seguridad #}
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+  {# Action identifier para sa password update #}
+  <input type="hidden" name="action" value="password" />
+
+  <h2 class="font-display text-xl text-white">Change password</h2>
+
+  {# Field para sa kasalukuyang password #}
+  {{ field('current_password', 'Current password', 'password', '', True, 'current-password', '',
+  errors.get('current_password','')) }}
+
+  {# Grid layout para sa bagong password at kumpirmasyon nito #}
+  <div class="grid gap-5 sm:grid-cols-2">
+    {{ field('new_password', 'New password', 'password', '', True, 'new-password', 'At least 8 characters.',
+    errors.get('new_password','')) }}
+
+    {{ field('confirm_password', 'Confirm new password', 'password', '', True, 'new-password', '',
+    errors.get('confirm_password','')) }}
+  </div>
+
+  {# Submit button para sa pagpapalit ng password #}
+  <button
+    class="rounded-sm bg-[#acb2b5] px-5 py-2.5 font-semibold text-neutral-950 transition-all duration-200 hover:bg-[#c9ced1] hover:scale-[1.01] active:scale-95 shadow-md hover:shadow-[0_0_20px_rgba(172,178,181,0.25)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+    Change password
+  </button>
+</form>
+
+{% endblock %}

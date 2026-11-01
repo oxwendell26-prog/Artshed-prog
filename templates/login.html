@@ -1,0 +1,106 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang istruktura mula sa base.html at inaangkat ang field macro #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% from "macros.html" import field %}
+
+{# Pagtatakda ng dynamic na pamagat ng pahina batay sa uri ng account (Artist o Client) #}
+{% block title %}
+{{ 'Artist' if account_type == 'artist' else 'Client' }} sign in | Kidapawan City Visual Artists
+{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="login-section">
+
+  {# Link pabalik sa pahina ng pagpipilian ng uri ng account #}
+  <a href="{{ url_for('login') }}" class="login-back-link">
+    &larr; Choose account type
+  </a>
+
+  {# Pangunahing pamagat ng pahina #}
+  <h1 class="login-title">
+    {{ 'Artist sign in' if account_type == 'artist' else 'Client sign in' }}
+  </h1>
+
+  {# Deskripsyon ng pahina (inayos para maiwasan ang awkward na line break) #}
+  <p class="login-subtitle">
+    {{ 'Sign in to your approved artist account.' if account_type == 'artist' else 'Sign in to message artists and track
+    your orders.' }}
+  </p>
+
+
+  {# ========================================== #}
+  {# 3. LOGIN FORM SECTION #}
+  {# ========================================== #}
+  <form method="post" class="login-form">
+    {# CSRF Token para sa seguridad laban sa Cross-Site Request Forgery #}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    {# Input field para sa Email gamit ang macro #}
+    {{ field('email', 'Email', 'email', email, True, 'email') }}
+
+    {# Input field para sa Password gamit ang macro #}
+    {{ field('password', 'Password', 'password', '', True, 'current-password') }}
+
+    {# Checkbox para sa 'Keep me logged in' at link para sa Forgot Password #}
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+      <label class="login-checkbox-label" style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0;">
+        <input type="checkbox" name="remember" class="login-checkbox" />
+        Keep me logged in
+      </label>
+
+      <a href="{{ url_for('forgot_password') }}" class="login-footer-link" style="font-size: 0.8rem;">
+        Forgot password?
+      </a>
+    </div>
+
+    {# Button para i-submit ang login #}
+    <button type="submit" class="login-submit-btn">
+      Log in
+    </button>
+  </form>
+
+
+  {# ========================================== #}
+  {# 4. ALTERNATIVE LINKS (REGISTER & SWITCH) #}
+  {# ========================================== #}
+
+  {# Link kung kailangan ng bagong account #}
+  <p class="login-footer-text">
+    {% if account_type == 'artist' %}Need an artist account?{% else %}Need a client account?{% endif %}
+
+    <a href="{{ url_for('register' if account_type == 'artist' else 'client_register') }}" class="login-footer-link">
+      {{ 'Apply as an artist' if account_type == 'artist' else 'Create a client account' }}
+    </a>
+  </p>
+
+  {# Link para lumipat sa kabilang uri ng sign-in (Artist to Client o Client to Artist) na pinasimple #}
+  <p class="login-footer-text" style="margin-top: 0.75rem;">
+    {{ 'Client account?' if account_type == 'artist' else 'Artist account?' }}
+
+    <a href="{{ url_for('client_login' if account_type == 'artist' else 'artist_login', next=next_url) }}"
+      class="login-footer-link">
+      Use the other sign-in
+    </a>
+  </p>
+
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}

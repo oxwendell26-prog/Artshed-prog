@@ -1,0 +1,168 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{% extends "account_layout.html" %}
+{% from "macros.html" import canvas %}
+
+{% block title %}Orders & Escrow Payouts | Kidapawan City Visual Artists{% endblock %}
+
+{% block panel_width %}max-w-4xl{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN PANEL CONTENT SECTION #}
+{# ========================================== #}
+{% block panel %}
+<div>
+
+  <h1 class="font-display text-3xl text-white sm:text-4xl">Orders & Escrow Payouts</h1>
+
+  <p class="mt-2 text-neutral-400 text-sm">
+    Manage your artwork sales. Admin verifies and records payments in escrow; your payout is recorded after the client
+    confirms receipt and released after the admin transfers it. Platform commission is fixed at 3%.
+  </p>
+
+
+  {# ========================================== #}
+  {# 3. LISTAHAN NG MGA ORDERS #}
+  {# ========================================== #}
+
+  {% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/orders.css') }}">
+  {% endblock %}
+
+  {% if orders %}
+  <ul class="mt-8 space-y-5">
+
+    {% for o in orders %}
+    <li>
+      <article
+        class="flex flex-wrap gap-6 rounded-lg bg-neutral-900 p-5 ring-1 {{ 'ring-amber-500/50' if o.status == 'payment_uploaded' else 'ring-white/10' }}">
+
+        {# Artwork Canvas Preview #}
+        {% if o.artwork %}
+        <div class="w-24 shrink-0 bg-neutral-950 p-1.5 ring-1 ring-white/10 self-start">
+          {{ canvas(o.artwork, 'aspect-[4/5]') }}
+        </div>
+        {% endif %}
+
+        <div class="min-w-0 flex-1">
+
+          {# Title & Status Badge #}
+          <div class="flex flex-wrap items-center gap-3">
+            <h2 class="font-display text-xl text-white">
+              {{ o.artwork_title }}
+            </h2>
+
+            {% if o.status == 'pending' %}
+            <span class="rounded-full bg-brass/15 px-2.5 py-0.5 text-xs font-semibold text-brass ring-1 ring-brass/40">
+              Pending Payment
+            </span>
+            {% elif o.status == 'payment_uploaded' %}
+            <span
+              class="rounded-full bg-amber-400/15 px-2.5 py-0.5 text-xs font-semibold text-amber-300 ring-1 ring-amber-400/40">
+              Payment Uploaded (Admin Verifying)
+            </span>
+            {% elif o.status == 'in_escrow' %}
+            <span
+              class="rounded-full bg-blue-500/15 px-2.5 py-0.5 text-xs font-semibold text-blue-300 ring-1 ring-blue-500/40">
+              Payment Secured in Escrow
+            </span>
+            {% elif o.status == 'completed' %}
+            {% if o.payout_released %}
+            <span
+              class="rounded-full bg-emerald-400/15 px-2.5 py-0.5 text-xs font-semibold text-emerald-300 ring-1 ring-emerald-400/40">
+              Payout Released
+            </span>
+            {% else %}
+            <span
+              class="rounded-full bg-amber-400/15 px-2.5 py-0.5 text-xs font-semibold text-amber-300 ring-1 ring-amber-400/40">
+              Client Confirmed · Payout Pending
+            </span>
+            {% endif %}
+            {% else %}
+            <span
+              class="rounded-full bg-white/5 px-2.5 py-0.5 text-xs font-medium text-neutral-400 ring-1 ring-white/10">
+              Declined / Cancelled
+            </span>
+            {% endif %}
+          </div>
+
+          {# Financial Breakdown (3% Commission & Payout) #}
+          <div
+            class="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-neutral-950/60 p-3 ring-1 ring-white/5 text-xs sm:text-sm">
+            <div>
+              <span class="text-neutral-500 block">Selling Price</span>
+              <strong class="text-white">{{ o.price_label }}</strong>
+            </div>
+            <div>
+              <span class="text-neutral-500 block">3% Platform Fee</span>
+              <strong class="text-amber-400">-{{ o.commission_label }}</strong>
+            </div>
+            <div>
+              <span class="text-neutral-500 block">Your Net Payout</span>
+              <strong class="text-emerald-400">{{ o.payout_label }}</strong>
+            </div>
+          </div>
+
+          <p class="mt-2 text-xs text-neutral-400">
+            Order #{{ o.id }} • Placed {{ o.created_at.strftime('%B %d, %Y') }}
+          </p>
+
+          {# Buyer Contact Details #}
+          <dl class="mt-4 grid grid-cols-[5rem_1fr] gap-y-1 text-xs sm:text-sm text-neutral-300">
+            <dt class="text-neutral-400">Buyer</dt>
+            <dd>{{ o.buyer_name }}</dd>
+
+            <dt class="text-neutral-400">Email</dt>
+            <dd class="break-all">
+              <a href="mailto:{{ o.buyer_email }}" class="underline underline-offset-4 hover:text-white">
+                {{ o.buyer_email }}
+              </a>
+            </dd>
+
+            <dt class="text-neutral-400">Phone</dt>
+            <dd>
+              <a href="tel:{{ o.buyer_phone }}" class="underline underline-offset-4 hover:text-white">
+                {{ o.buyer_phone }}
+              </a>
+            </dd>
+
+            {% if o.note %}
+            <dt class="text-neutral-400">Message</dt>
+            <dd>{{ o.note }}</dd>
+            {% endif %}
+          </dl>
+
+          {# Status Action Notice #}
+          {% if o.status == 'in_escrow' %}
+          <div class="mt-4 rounded bg-blue-500/10 p-3 ring-1 ring-blue-500/20 text-xs text-blue-200">
+            ✓ <strong>Payment verified:</strong> Admin recorded the funds as held in escrow. You may now prepare and
+            ship the artwork. Payout is recorded after the client confirms receipt.
+          </div>
+          {% elif o.status == 'completed' and not o.payout_released %}
+          <div class="mt-4 rounded bg-amber-500/10 p-3 ring-1 ring-amber-500/20 text-xs text-amber-200">
+            Client confirmed receipt. Your net payout of {{ o.payout_label }} has been recorded and is awaiting admin
+            transfer.
+          </div>
+          {% elif o.status == 'completed' and o.payout_released %}
+          <div class="mt-4 rounded bg-emerald-500/10 p-3 ring-1 ring-emerald-500/20 text-xs text-emerald-200">
+            Admin marked your {{ o.payout_label }} net payout as released{% if o.payout_released_at %} on
+            {{ o.payout_released_at|ph_time }}{% endif %}.
+          </div>
+          {% endif %}
+
+        </div>
+      </article>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {% else %}
+  <p class="mt-10 rounded-lg bg-neutral-900 p-6 ring-1 ring-white/10 text-neutral-400 text-sm">
+    No orders yet. When someone orders one of your paintings, it will show up here.
+  </p>
+  {% endif %}
+
+</div>
+{% endblock %}

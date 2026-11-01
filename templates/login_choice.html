@@ -1,0 +1,93 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT DYNAMIC TITLE #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa base.html #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login_choice.css') }}">
+{% endblock %}
+
+{# Pagtatakda ng pamagat ng pahina sa tab ng browser #}
+{% block title %}Log in | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="login-choice-section">
+
+  {# Pangunahing pamagat at deskripsyon ng pahina #}
+  <h1 class="login-choice-title">Log in to ArtHub</h1>
+
+  <p class="login-choice-subtitle">
+    Choose how you would like to sign in
+  </p>
+
+
+  {# ========================================== #}
+  {# 3. LOGIN CHOICE CARDS WITH HOVER EFFECTS #}
+  {# ========================================== #}
+  <div class="login-choice-grid">
+
+    {# ------------------------------------------ #}
+    {# A. Artist Login Card #}
+    {# ------------------------------------------ #}
+    {# Interactive card para sa mga artist na may lift at border glow hover effect #}
+    <a href="{{ url_for('artist_login') }}" class="login-choice-card">
+      <div>
+        <p class="login-choice-tag">
+          Artists
+        </p>
+
+        <h2 class="login-choice-card-title">
+          Artist account.
+        </h2>
+
+        <p class="login-choice-card-desc">
+          Manage your paintings, check orders from buyers, and update your artist profile.
+        </p>
+      </div>
+
+      <span class="login-choice-prompt">
+        Log in as artist &rarr;
+      </span>
+    </a>
+
+
+    {# ------------------------------------------ #}
+    {# B. Client Login Card #}
+    {# ------------------------------------------ #}
+    {# Interactive card para sa mga client/buyer na may lift at border glow hover effect #}
+    <a href="{{ url_for('client_login') }}" class="login-choice-card">
+      <div>
+        <p class="login-choice-tag">
+          Clients
+        </p>
+
+        <h2 class="login-choice-card-title">
+          Client account.
+        </h2>
+
+        <p class="login-choice-card-desc">
+          Track your artwork orders, view saved conversations, and interact with the community.
+        </p>
+      </div>
+
+      <span class="login-choice-prompt">
+        Log in as client &rarr;
+      </span>
+    </a>
+
+  </div>
+
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/login_choice.js') }}"></script>
+{% endblock %}

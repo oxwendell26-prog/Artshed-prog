@@ -1,0 +1,102 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa base.html at inaangkat ang avatar macro #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/artists.css') }}">
+{% endblock %}
+
+{% from "macros.html" import avatar %}
+
+{# Pagtatakda ng pamagat ng pahina sa tab ng browser #}
+{% block title %}Artists Directory | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="artists-section">
+
+  {# ------------------------------------------ #}
+  {# A. Header at Deskripsyon ng Pahina #}
+  {# ------------------------------------------ #}
+  <header class="artists-header">
+    <p class="artists-tag">
+      Local creators
+    </p>
+
+    <h1 class="artists-title">
+      Meet the artists
+    </h1>
+
+    <p class="artists-subtitle">
+      Discover talented visual artists based in Kidapawan City. Explore their profiles, focal styles, and original
+      paintings.
+    </p>
+  </header>
+
+
+  {# ========================================== #}
+  {# 3. ARTISTS DIRECTORY GRID #}
+  {# ========================================== #}
+  {% if artists %}
+  <ul class="artists-grid">
+    {% for artist in artists %}
+    <li>
+      {# Interactive Artist Card na may Hover Lift, Border Glow, at Shadow #}
+      <a href="{{ url_for('artist_detail', artist_id=artist.id) }}" class="artist-card">
+
+        {# Avatar container na may smooth zoom/scale effect sa hover #}
+        <div class="artist-card-avatar-wrap">
+          {{ avatar(artist, 'h-16 w-16', 'text-xl') }}
+        </div>
+
+        <div class="artist-card-content">
+          {# Pangalan ng artist na nagpapalit ng kulay sa hover #}
+          <span class="artist-card-name">
+            {{ artist.name }}
+          </span>
+
+          {# Art focus o espesyalisasyon #}
+          {% if artist.focus %}
+          <span class="artist-card-focus">
+            {{ artist.focus }}
+          </span>
+          {% endif %}
+
+          {# Maikling bio kung mayroonman #}
+          {% if artist.bio %}
+          <p class="artist-card-bio">
+            {{ artist.bio }}
+          </p>
+          {% endif %}
+
+          {# Dynamic link prompt na lumilitaw sa hover #}
+          <span class="artist-card-link-prompt">
+            View profile &rarr;
+          </span>
+        </div>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {# Mensahe kung wala pang nakarehistro o naaprubahang artist #}
+  {% else %}
+  <p class="artists-empty-notice">
+    No artists listed in the directory yet.
+  </p>
+  {% endif %}
+
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/artists.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,103 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{% extends "base.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/artist_application_form.css') }}">
+{% endblock %}
+
+{% from "macros.html" import field %}
+
+{% block title %}Apply as an artist | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="artist-app-section">
+
+  <a href="{{ url_for('messages') }}" class="artist-app-back-link">
+    Back to messages
+  </a>
+
+  <h1 class="artist-app-title">
+    Apply as an artist
+  </h1>
+
+  <p class="artist-app-subtitle">
+    Your existing client account and Gmail will stay the same. An admin will review your application, custom
+    style/medium, and sample works before approval.
+  </p>
+
+
+  {# ========================================== #}
+  {# 3. ARTIST APPLICATION FORM #}
+  {# ========================================== #}
+  <form method="post" enctype="multipart/form-data" class="artist-app-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    <div class="artist-app-user-box">
+      <p class="artist-app-user-name">{{ current_user.name }}</p>
+      <p class="artist-app-user-email">{{ current_user.email }}</p>
+    </div>
+
+    <!-- Custom Art Style, Subject, Medium Inputs -->
+    <div class="grid gap-4 sm:grid-cols-3 mb-4">
+      <div>
+        <label for="art_style" class="block text-xs font-medium text-neutral-300 mb-1">Art Style</label>
+        <input type="text" id="art_style" name="art_style" value="{{ form.get('art_style','') }}"
+          placeholder="e.g. Abstract" required
+          class="w-full rounded-md border-0 bg-neutral-950 px-3 py-2.5 text-xs text-white ring-1 ring-white/15 focus:outline-none focus:ring-2 focus:ring-[#acb2b5]">
+      </div>
+
+      <div>
+        <label for="art_subject" class="block text-xs font-medium text-neutral-300 mb-1">Art Subject</label>
+        <input type="text" id="art_subject" name="art_subject" value="{{ form.get('art_subject','') }}"
+          placeholder="e.g. Landscape" required
+          class="w-full rounded-md border-0 bg-neutral-950 px-3 py-2.5 text-xs text-white ring-1 ring-white/15 focus:outline-none focus:ring-2 focus:ring-[#acb2b5]">
+      </div>
+
+      <div>
+        <label for="art_medium" class="block text-xs font-medium text-neutral-300 mb-1">Art Medium</label>
+        <input type="text" id="art_medium" name="art_medium" value="{{ form.get('art_medium','') }}"
+          placeholder="e.g. Oil" required
+          class="w-full rounded-md border-0 bg-neutral-950 px-3 py-2.5 text-xs text-white ring-1 ring-white/15 focus:outline-none focus:ring-2 focus:ring-[#acb2b5]">
+      </div>
+    </div>
+
+    {{ field('experience', 'Experience (optional)', 'text', form.get('experience',''), False, 'off', 'Example: 10 years
+    of painting') }}
+
+    <!-- Sample Artworks Upload -->
+    <div class="artist-app-field-group">
+      <label for="sample_artworks" class="artist-app-label">
+        Upload Sample Artworks / Portfolio
+      </label>
+      <input type="file" id="sample_artworks" name="sample_artworks" multiple accept="image/*"
+        class="w-full rounded-md border-0 bg-neutral-950 px-3 py-2 text-xs text-white ring-1 ring-white/15 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#acb2b5] file:text-neutral-950">
+    </div>
+
+    <div class="artist-app-field-group">
+      <label for="bio" class="artist-app-label">
+        Short artist bio (optional)
+      </label>
+
+      <textarea id="bio" name="bio" rows="4" maxlength="600"
+        class="artist-app-textarea">{{ form.get('bio','') }}</textarea>
+    </div>
+
+    <button type="submit" class="artist-app-submit-btn">
+      Submit artist application
+    </button>
+
+  </form>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/artist_application_form.js') }}"></script>
+{% endblock %}

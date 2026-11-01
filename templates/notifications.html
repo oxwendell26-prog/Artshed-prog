@@ -1,0 +1,124 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa account_layout.html #}
+{% extends "account_layout.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/notifications.css') }}">
+{% endblock %}
+
+{# Inaangkat ang toggle macro para sa mga setting ng notification #}
+{% from "macros.html" import toggle %}
+
+{# Pagtatakda ng pamagat ng pahina sa tab ng browser #}
+{% block title %}Notifications | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN PANEL CONTENT SECTION #}
+{# ========================================== #}
+{% block panel %}
+
+{# Pamagat ng Pahina #}
+<h1 class="notif-title">Notifications</h1>
+
+
+{# ========================================== #}
+{# 3. NOTIFICATION PREFERENCES FORM #}
+{# ========================================== #}
+{# Form para sa pagtatakda ng mga kagustuhan o preferences sa notification #}
+{% if not current_user.is_admin %}
+<form method="post" action="{{ url_for('notification_preferences') }}" class="notif-form">
+  {# CSRF Token para sa seguridad #}
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+  <h2 class="notif-section-heading">Preferences</h2>
+
+  {# Toggle para sa bagong order gamit ang macro #}
+  {{ toggle('notify_new_orders', 'Notify me about new orders', 'Get a notification here when someone orders one of my
+  paintings. Orders always appear on the Orders page.', current_user.notify_new_orders) }}
+
+  {# Button para i-save ang preferences #}
+  <button type="submit" class="notif-save-btn">
+    Save preferences
+  </button>
+</form>
+{% endif %}
+
+
+{# ========================================== #}
+{# 4. INBOX HEADER AT CLEAR ALL BUTTON #}
+{# ========================================== #}
+<div class="notif-inbox-header-row">
+  <h2 class="notif-section-heading" style="font-size: 1.5rem;">Inbox</h2>
+
+  {# Ipinapakita lamang ang 'Clear all' button kung may mga notification item #}
+  {% if items %}
+  <form method="post" action="{{ url_for('clear_notifications') }}"
+    onsubmit="return confirm('Clear all notifications?');" style="margin: 0;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <button type="submit" class="notif-clear-btn">
+      Clear all
+    </button>
+  </form>
+  {% endif %}
+</div>
+
+
+{# ========================================== #}
+{# 5. NOTIFICATION LIST (INBOX ITEMS) #}
+{# ========================================== #}
+{% if items %}
+<ul class="notif-list">
+  {% for n in items %}
+  <li>
+    <a href="{% if current_user.is_admin %}{{ url_for('admin_orders' if n.kind == 'order' else 'admin_artist_applications' if n.kind == 'artist_application' else 'admin_dashboard') }}{% else %}{{ url_for('orders') }}{% endif %}"
+      class="notif-card {{ 'unread' if n.id in unread_ids else '' }}">
+      <div class="notif-card-top">
+        {# Mensahe ng notification #}
+        <p class="notif-card-msg">{{ n.message }}</p>
+
+        {# Badge kung ang notification ay bago pa lamang (unread) #}
+        {% if n.id in unread_ids %}
+        <span class="notif-unread-badge">
+          New
+        </span>
+        {% endif %}
+      </div>
+
+      {# Oras kung kailan natanggap ang notification #}
+      <p class="notif-card-time">{{ n.created_at|ph_time }}</p>
+
+      {# Link o aksyon para makita ang order #}
+      {% if current_user.is_admin %}
+      <p class="notif-card-action">
+        {% if n.kind == 'order' %}View orders{% elif n.kind == 'artist_application' %}Review applications{% else %}View admin dashboard{% endif %}
+      </p>
+      {% else %}
+      <p class="notif-card-action">View order</p>
+      {% endif %}
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+
+{# Mensahe kung wala pang mga notification #}
+{% else %}
+<p class="notif-empty-notice">
+  {% if current_user.is_admin %}
+  No notifications yet. New checkouts and artist applications will appear here.
+  {% else %}
+  No notifications yet. When someone orders one of your paintings, you’ll be notified here.
+  {% endif %}
+</p>
+{% endif %}
+
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,130 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{% extends "base.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/checkout.css') }}">
+{% endblock %}
+
+{% from "macros.html" import canvas, field %}
+
+{% block title %}Order {{ artwork.title }} | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="checkout-section">
+
+  <a href="{{ url_for('artwork_detail', artwork_id=artwork.id) }}" class="checkout-back-link">
+    Back to the painting
+  </a>
+
+  <h1 class="checkout-title">
+    Order this painting
+  </h1>
+
+  <div class="checkout-grid">
+
+    {# ========================================== #}
+    {# A. SIDEBAR: ARTWORK PREVIEW & DETAILS #}
+    {# ========================================== #}
+    <aside class="checkout-sidebar">
+      <div class="checkout-canvas-box">
+        {{ canvas(artwork, 'aspect-[4/5]') }}
+      </div>
+
+      <p class="checkout-artwork-title">{{ artwork.title }}</p>
+
+      <p class="checkout-artwork-artist-info">
+        by {{ artwork.artist_name }}, {{ artwork.year }}
+      </p>
+
+      {% if artwork.size %}
+      <p class="checkout-artwork-size">Oil on canvas, {{ artwork.size }}</p>
+      {% endif %}
+
+      <p class="checkout-artwork-price">
+        {{ artwork.price_label }}
+      </p>
+
+      {# Escrow Notice #}
+      <div class="mt-4 rounded-lg bg-emerald-500/10 p-3 ring-1 ring-emerald-500/20 text-xs text-emerald-300">
+        <strong>Admin-verified payment:</strong> After you upload your receipt, an admin must manually verify the payment
+        before the order enters the platform's escrow ledger.
+      </div>
+
+      {# Official Escrow Account Details #}
+      <div class="mt-4 rounded-lg bg-neutral-900 p-4 ring-1 ring-white/10 text-xs text-neutral-300">
+        <h3 class="font-bold text-white mb-2">Official Platform Escrow Accounts:</h3>
+        <p class="mb-1">📱 <strong>GCash:</strong> 09919497021 (Kidapawan Art-hub)</p>
+        <p class="mb-1">💳 <strong>Maya:</strong> 09919497021 (Admin Name)</p>
+        <p class="text-[11px] text-neutral-400 mt-2">Send payment to the platform account, then upload your receipt on
+          the order status page. The app does not automatically receive or transfer funds; verification and artist
+          payouts are recorded manually by an admin.</p>
+      </div>
+    </aside>
+
+
+    {# ========================================== #}
+    {# B. CHECKOUT FORM AT PROCESS GUIDE #}
+    {# ========================================== #}
+    <div>
+
+      <form method="post" class="checkout-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+        {{ field('name', 'Full name', 'text', form.get('name',''), True, 'name', '', errors.get('name','')) }}
+
+        {{ field('email', 'Email', 'email', form.get('email',''), True, 'email', 'We will send your order link here.',
+        errors.get('email','')) }}
+
+        {{ field('phone', 'Phone number', 'tel', form.get('phone',''), True, 'tel', 'Required for delivery
+        coordination.', errors.get('phone','')) }}
+
+        <div class="checkout-field-group">
+          <label for="note" class="checkout-label">
+            Delivery instructions or notes (optional)
+          </label>
+          <textarea id="note" name="note" rows="3" maxlength="500"
+            placeholder="Delivery address, preferred contact time, or special instructions"
+            class="checkout-textarea">{{ form.get('note','') }}</textarea>
+        </div>
+
+        <button type="submit" class="checkout-submit-btn">
+          Place Order ({{ artwork.price_label }})
+        </button>
+      </form>
+
+
+      {# How Escrow Works Guide #}
+      <h2 class="checkout-guide-heading">How Escrow Purchase Works</h2>
+      <ol class="checkout-guide-list">
+        <li>
+          <strong>Reserve Item:</strong> Placing your order reserves the artwork immediately.
+        </li>
+        <li>
+          <strong>Upload Payment:</strong> You upload your proof of payment to the official platform Escrow account.
+        </li>
+        <li>
+          <strong>Admin Verification:</strong> Admin manually checks the platform account and receipt, then records
+          verified funds in the escrow ledger before the artist prepares the painting.
+        </li>
+        <li>
+          <strong>Receive & Release:</strong> After you inspect and confirm receipt, the net payout (price less 3%) is
+          recorded. Admin then transfers it to the artist and marks it released.
+        </li>
+      </ol>
+
+    </div>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/checkout.js') }}"></script>
+{% endblock %}

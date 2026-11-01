@@ -1,0 +1,178 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT TITLE #}
+{# ========================================== #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/my_artworks.css') }}">
+{% endblock %}
+
+{% block title %}My Artworks Gallery{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<div class="my-art-container">
+
+    <div class="my-art-header">
+        <div>
+            <h1 class="my-art-title">My Artworks Gallery</h1>
+            <p class="my-art-subtitle">Manage, upload, and edit your artworks here.</p>
+        </div>
+        <div class="my-art-actions-flex">
+            <button type="button" onclick="openAddArtworkModal()" class="btn-silver">
+                + Add New Artwork
+            </button>
+            <a href="{{ url_for('dashboard') }}" class="my-art-btn-neutral">
+                ← Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    {% if artworks %}
+    <div class="my-art-grid">
+        {% for artwork in artworks %}
+        <div class="my-art-card">
+            <div>
+                {% if artwork.image %}
+                <img src="{{ url_for('static', filename='uploads/' ~ artwork.image) }}" class="my-art-card-img">
+                {% else %}
+                <div class="my-art-card-placeholder">
+                    No Image</div>
+                {% endif %}
+
+                <div class="my-art-card-info">
+                    <div class="my-art-card-row">
+                        <h3 class="my-art-card-title">{{ artwork.title }}</h3>
+                        <span class="my-art-card-price-badge">{{ artwork.price_label }}</span>
+                    </div>
+                    <p class="my-art-card-meta">Taon: {{ artwork.year }} {% if artwork.size %}· {{ artwork.size }}{%
+                        endif %}</p>
+                    <p class="my-art-card-meta text-xs text-[#acb2b5] mt-1">
+                        Category: {{ artwork.style | title }} / {{ artwork.subject | title }} / {{ artwork.medium |
+                        title }}
+                    </p>
+                    {% if artwork.note %}
+                    <p class="my-art-card-note">{{ artwork.note }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="my-art-card-footer">
+                <span class="my-art-status-{{ 'avail' if artwork.available else 'sold' }}">
+                    {{ 'Available' if artwork.available else 'Sold / Unavailable' }}
+                </span>
+
+                <div class="my-art-card-btn-group">
+                    <a href="{{ url_for('edit_artwork', artwork_id=artwork.id) }}" class="my-art-btn-edit">
+                        Edit
+                    </a>
+                    <form action="{{ url_for('delete_artwork', artwork_id=artwork.id) }}" method="POST"
+                        onsubmit="return confirm('Are you sure you want to delete this artwork?');"
+                        style="margin: 0;">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                        <button type="submit" class="my-art-btn-delete">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="my-art-empty-notice">
+        You have not uploaded any artworks yet. Select "+ Add New Artwork" above to get started.
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- MODAL: Add New Artwork -->
+<div id="addArtworkModal" class="my-art-modal-overlay hidden">
+    <div class="my-art-modal-box" onclick="event.stopPropagation()">
+        <div class="my-art-modal-header">
+            <h3 class="my-art-modal-title">Upload New Artwork</h3>
+            <button type="button" onclick="closeAddArtworkModal()" class="my-art-close-btn">✕</button>
+        </div>
+
+        <form method="POST" action="{{ url_for('my_artworks') }}" enctype="multipart/form-data" class="space-y-4">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+            <div>
+                <label class="block text-xs font-medium text-neutral-300 mb-1">Artwork Title *</label>
+                <input type="text" name="title" required class="community-caption-textarea" style="margin-top: 0;" />
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem;">
+                <div>
+                    <label class="block text-xs font-medium text-neutral-300 mb-1">Year Created *</label>
+                    <input type="number" name="year" value="{{ now_year }}" required class="community-caption-textarea"
+                        style="margin-top: 0;" />
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-neutral-300 mb-1">Price (₱)</label>
+                    <input type="text" name="price" placeholder="e.g. 5000" class="community-caption-textarea"
+                        style="margin-top: 0;" />
+                </div>
+            </div>
+
+            <!-- Custom Art Category Text Inputs (Malayang mag-type ang artist) -->
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem;">
+                <div>
+                    <label class="block text-xs font-medium text-neutral-300 mb-1">Style *</label>
+                    <input type="text" name="style" placeholder="e.g. Abstract, Realism" required
+                        class="community-caption-textarea" style="margin-top: 0;" />
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-neutral-300 mb-1">Subject *</label>
+                    <input type="text" name="subject" placeholder="e.g. Landscape, Portrait" required
+                        class="community-caption-textarea" style="margin-top: 0;" />
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-neutral-300 mb-1">Medium *</label>
+                    <input type="text" name="medium" placeholder="e.g. Oil, Acrylic" required
+                        class="community-caption-textarea" style="margin-top: 0;" />
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-neutral-300 mb-1">Size / Dimensions</label>
+                <input type="text" name="size" placeholder="e.g. 24x36 inches" class="community-caption-textarea"
+                    style="margin-top: 0;" />
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-neutral-300 mb-1">Artwork Image</label>
+                <input type="file" name="image" accept="image/*" class="community-file-input" />
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium text-neutral-300 mb-1">Description / Note</label>
+                <textarea name="note" rows="2" class="community-caption-textarea" style="margin-top: 0;"></textarea>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="checkbox" name="available" id="available" value="1" checked class="edit-art-checkbox" />
+                <label for="available" class="text-xs text-neutral-300 cursor-pointer">Available for purchase</label>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" onclick="closeAddArtworkModal()" class="my-art-btn-neutral"
+                    style="font-size: 0.75rem; padding: 0.5rem 1rem;">Cancel</button>
+                <button type="submit" class="btn-silver" style="font-size: 0.75rem; padding: 0.5rem 1rem;">Upload to
+                    Gallery</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/my_artworks.js') }}"></script>
+{% endblock %}

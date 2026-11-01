@@ -1,0 +1,67 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT DYNAMIC TITLE #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa base.html #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new_artist_message.css') }}">
+{% endblock %}
+
+{# Pagtatakda ng pamagat ng pahina sa tab ng browser gamit ang pangalan ng artist #}
+{% block title %}Message {{ artist.name }} | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="new-msg-section">
+
+  {# Link pabalik sa profile ng partikular na artist #}
+  <a href="{{ url_for('artist_detail', artist_id=artist.id) }}" class="new-msg-back-link">
+    Back to {{ artist.name }}’s profile
+  </a>
+
+  {# Header at Deskripsyon ng Pahina #}
+  <h1 class="new-msg-title">
+    Message {{ artist.name }}
+  </h1>
+
+  <p class="new-msg-subtitle">
+    Start a private conversation with this artist.
+  </p>
+
+
+  {# ========================================== #}
+  {# 3. MESSAGE FORM SECTION #}
+  {# ========================================== #}
+  <form method="post" class="new-msg-form">
+    {# CSRF Token para sa seguridad laban sa Cross-Site Request Forgery #}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    {# Textarea Input para sa Laman ng Mensahe #}
+    <div class="new-msg-field-group">
+      <label for="message" class="new-msg-label">
+        Message
+      </label>
+
+      <textarea id="message" name="message" rows="6" maxlength="2000" required
+        class="new-msg-textarea">{{ message }}</textarea>
+    </div>
+
+    {# Submit Button para sa Pagpapadala ng Mensahe #}
+    <button type="submit" class="new-msg-send-btn">
+      Send message
+    </button>
+  </form>
+
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/new_artist_message.js') }}"></script>
+{% endblock %}

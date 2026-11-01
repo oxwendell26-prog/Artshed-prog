@@ -1,0 +1,221 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa base.html #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/artwork.css') }}">
+{% endblock %}
+
+{# Inaangkat ang macros para sa status badge, canvas, at avatar #}
+{% from "macros.html" import status_badge, canvas, avatar %}
+
+{# Pagtatakda ng pamagat ng pahina gamit ang pamagat ng sining at pangalan ng artist #}
+{% block title %}{{ artwork.title }} by {{ artwork.artist_name }} | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="artwork-section">
+
+  {# Link pabalik sa listahan ng lahat ng artworks #}
+  <a href="{{ url_for('artworks') }}" class="artwork-back-link">
+    Back to all artworks
+  </a>
+
+  <div class="artwork-grid">
+
+    {# ========================================== #}
+    {# A. ARTWORK IMAGE / CANVAS DISPLAY #}
+    {# ========================================== #}
+    <div class="artwork-canvas-wrapper">
+      <div class="artwork-canvas-box">
+        {{ canvas(artwork, 'aspect-[4/5] ring-1 ring-white/20') }}
+      </div>
+    </div>
+
+
+    {# ========================================== #}
+    {# B. ARTWORK DETAILS AT ACTIONS PANEL #}
+    {# ========================================== #}
+    <div>
+
+      {# Pamagat ng Artwork at Status Badge #}
+      <div class="artwork-title-row">
+        <h1 class="artwork-main-title">
+          {{ artwork.title }}
+        </h1>
+        {{ status_badge(artwork, true) }}
+      </div>
+
+      {# Link patungo sa profile ng artist na gumawa #}
+      <a href="{{ url_for('artist_detail', artist_id=artwork.artist_id) }}" class="artwork-artist-link">
+        {{ avatar(artwork.artist, 'h-10 w-10', 'text-sm') }}
+        <span class="artwork-artist-name-text">{{ artwork.artist_name }}</span>
+      </a>
+
+
+      {# ========================================== #}
+      {# C. PURCHASE / CHECKOUT BOX #}
+      {# ========================================== #}
+      <div class="artwork-purchase-card">
+        <p class="artwork-price-label">Price</p>
+
+        <p class="artwork-price-amount {{ 'available' if artwork.available else 'sold' }}">
+          {{ artwork.price_label }}
+        </p>
+
+        {# Kundisyon kung naibenta na, naka-reserve, o pagmamay-ari ng user #}
+        {% if not artwork.available %}
+        <p class="artwork-notice-text">This artwork has been sold.</p>
+
+        {% elif artwork.reserved %}
+        <p class="artwork-notice-reserved">
+          This artwork is reserved for a buyer. Check back later.
+        </p>
+
+        {% elif current_user.is_authenticated and current_user.id == artwork.artist_id %}
+        <p class="artwork-notice-text">This is your artwork.</p>
+
+        {# Kung pwede pang bilhin at ang naka-log in ay client #}
+        {% elif artwork.price and current_user.is_authenticated and current_user.account_type == 'client' %}
+        <a href="{{ url_for('checkout', artwork_id=artwork.id) }}" class="artwork-btn-brass">
+          Checkout
+        </a>
+
+        <p class="artwork-notice-text" style="margin-top: 0.75rem;">
+          No payment is taken on this site. The artist will contact you to arrange payment and delivery.
+        </p>
+
+        {# Kung may presyo pero hindi pa naka-log in bilang client #}
+        {% elif artwork.price %}
+        <a href="{{ url_for('client_register', next=url_for('checkout', artwork_id=artwork.id)) }}"
+          class="artwork-btn-brass">
+          Create a client account to buy
+        </a>
+
+        {% else %}
+        <p class="artwork-notice-text">
+          The artist hasn’t set a price yet, so this painting can’t be ordered.
+        </p>
+        {% endif %}
+
+
+        {# ========================================== #}
+        {# D. MESSAGING OPTIONS PARA SA ARTWORK #}
+        {# ========================================== #}
+        {% if current_user.id != artwork.artist_id %}
+        {% if current_user.is_authenticated and current_user.account_type == 'client' %}
+        <a href="{{ url_for('new_conversation', artwork_id=artwork.id) }}" class="artwork-btn-outline">
+          Message the artist
+        </a>
+        {% else %}
+        <a href="{{ url_for('client_register', next=url_for('new_conversation', artwork_id=artwork.id)) }}"
+          class="artwork-btn-outline">
+          Create a client account to message
+        </a>
+        {% endif %}
+
+        <p class="artwork-notice-text" style="margin-top: 0.75rem;">
+          Ask the artist a question or discuss this painting. A client account is required.
+        </p>
+        {% endif %}
+      </div>
+
+
+      {# ========================================== #}
+      {# E. ABOUT THIS PAINTING (TALA / NOTE) #}
+      {# ========================================== #}
+      {% if artwork.note %}
+      <h2 class="artwork-section-heading">
+        About this painting
+      </h2>
+
+      <p class="artwork-about-text">
+        {{ artwork.note }}
+      </p>
+      {% endif %}
+
+
+      {# ========================================== #}
+      {# F. DETALYE NG ARTWORK (DEFINITION LIST) #}
+      {# ========================================== #}
+      <h2 class="artwork-section-heading">Details</h2>
+
+      <dl class="artwork-details-dl">
+        <dt class="artwork-details-dt">Artist</dt>
+        <dd>
+          <a href="{{ url_for('artist_detail', artist_id=artwork.artist_id) }}" class="artwork-details-link">
+            {{ artwork.artist_name }}
+          </a>
+        </dd>
+
+        <dt class="artwork-details-dt">Year</dt>
+        <dd>{{ artwork.year }}</dd>
+
+        <dt class="artwork-details-dt">Medium</dt>
+        <dd>Oil on canvas</dd>
+
+        {% if artwork.size %}
+        <dt class="artwork-details-dt">Size</dt>
+        <dd>{{ artwork.size }}</dd>
+        {% endif %}
+
+        {% if artwork.created_at %}
+        <dt class="artwork-details-dt">Posted</dt>
+        <dd>{{ artwork.created_at.strftime('%B %Y') }}</dd>
+        {% endif %}
+      </dl>
+
+      {# Kung ang naka-log in ay ang mismong artist, may pagpipilian silang i-manage ito #}
+      {% if current_user.is_authenticated and current_user.id == artwork.artist_id %}
+      <a href="{{ url_for('dashboard') }}" class="artwork-owner-link">
+        Manage this artwork in your dashboard
+      </a>
+      {% endif %}
+
+    </div>
+  </div>
+
+
+  {# ========================================== #}
+  {# 4. MORE ARTWORKS FROM THE SAME ARTIST #}
+  {# ========================================== #}
+  {% if more %}
+  <div class="artwork-more-section">
+    <h2 class="artwork-section-heading" style="font-size: 1.875rem;">
+      More from {{ artwork.artist_name }}
+    </h2>
+
+    <ul class="artwork-more-grid">
+      {% for p in more %}
+      <li>
+        <a href="{{ url_for('artwork_detail', artwork_id=p.id) }}" class="artwork-more-card-link">
+          <div class="artwork-more-canvas-box">
+            {{ canvas(p, 'aspect-square') }}
+          </div>
+
+          <p class="artwork-more-title">{{ p.title }}</p>
+
+          <p class="artwork-more-price {{ 'available' if p.available else 'sold' }}">
+            {{ p.price_label if p.available else 'Sold' }}
+          </p>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/artwork.js') }}"></script>
+{% endblock %}

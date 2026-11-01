@@ -1,0 +1,159 @@
+{# ========================================== #}
+{# 1. CANVAS MACRO (PANG-DISPLAY NG SINING) #}
+{# ========================================== #}
+{# Gumagawa ng container para sa sining o painting na may CSS gradient o aktwal na larawan #}
+{% macro canvas(p, extra='') %}
+<div class="macro-canvas {{ extra }}" style="--c1:{{ p.colors[0] }};--c2:{{ p.colors[1] }};--c3:{{ p.colors[2] }}"
+  role="img" aria-label="{{ p.title }}, oil on canvas by {{ p.artist_name }}">
+  {% if p.image %}
+  <img src="{{ url_for('static', filename='uploads/' ~ p.image) }}" alt="{{ p.title }}" class="macro-canvas-img" />
+  {% endif %}
+</div>
+{% endmacro %}
+
+
+{# ========================================== #}
+{# 2. FIELD MACRO (FORM INPUTS) #}
+{# ========================================== #}
+{# Ginagamit sa pagbuo ng mga input field na may kasamang label, error handling, at password eye toggle #}
+{% macro field(name, label, type='text', value='', required=False, autocomplete='off', hint='', error='') %}
+<div class="macro-field-group">
+
+  <label for="{{ name }}" class="macro-field-label">
+    {{ label }}
+  </label>
+
+  <div class="macro-field-wrapper">
+    <input id="{{ name }}" name="{{ name }}" type="{{ type }}" value="{{ value if type != 'password' else '' }}"
+      autocomplete="{{ autocomplete }}" {% if required %}required{% endif %} {% if error %} aria-invalid="true"
+      aria-describedby="{{ name }}-error" {% endif %}
+      class="macro-field-input {{ 'has-password-padding' if type == 'password' else '' }} {{ 'has-error' if error else '' }}" />
+
+    {# Password Show/Hide Toggle Button #}
+    {% if type == 'password' %}
+    <button type="button" class="macro-password-toggle-btn" data-password-toggle aria-label="Show password"
+      aria-pressed="false">
+      {# Open Eye Icon #}
+      <svg data-eye-open class="macro-eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.7"
+        aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M2.25 12s3.5-6.25 9.75-6.25S21.75 12 21.75 12 18.25 18.25 12 18.25 2.25 12 2.25 12Z" />
+        <circle cx="12" cy="12" r="2.75" />
+      </svg>
+
+      {# Closed Eye Icon #}
+      <svg data-eye-closed class="macro-eye-icon hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="1.7" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="m3 3 18 18M10.58 10.58a2 2 0 0 0 2.83 2.83M9.88 5.1A10.9 10.9 0 0 1 12 4.9c6.25 0 9.75 7.1 9.75 7.1a17.3 17.3 0 0 1-3.2 3.98M6.1 6.1C3.65 7.8 2.25 12 2.25 12s3.5 7.1 9.75 7.1c1.3 0 2.48-.32 3.55-.84" />
+      </svg>
+    </button>
+    {% endif %}
+  </div>
+
+  {# Error message o hint text #}
+  {% if error %}
+  <p id="{{ name }}-error" class="macro-field-error">{{ error }}</p>
+  {% elif hint %}
+  <p class="macro-field-hint">{{ hint }}</p>
+  {% endif %}
+
+</div>
+{% endmacro %}
+
+
+{# ========================================== #}
+{# 3. AVATAR MACRO (PANG-PROFILE NG ARTIST) #}
+{# ========================================== #}
+{# Nagpapakita ng larawan ng profile o initials kung walang larawan #}
+{% macro avatar(a, size='h-14 w-14', text='text-lg') %}
+{% if a.avatar %}
+<img src="{{ url_for('static', filename='uploads/' ~ a.avatar) }}" alt="Photo of {{ a.name }}"
+  class="macro-avatar-img {{ size }}" />
+{% else %}
+<div class="macro-avatar-initials {{ size }} font-display {{ text }}" aria-hidden="true">
+  {{ a.initials }}
+</div>
+{% endif %}
+{% endmacro %}
+
+
+{# ========================================== #}
+{# 4. STATUS BADGE MACRO #}
+{# ========================================== #}
+{# Nagpapakita ng badge kung Sold, Reserved, o Available ang isang sining #}
+{% macro status_badge(a, big=False) %}
+{% set size_class = 'big' if big else 'small' %}
+
+{% if not a.available %}
+<span class="macro-badge sold {{ size_class }}">
+  Sold
+</span>
+{% elif a.reserved %}
+<span class="macro-badge reserved {{ size_class }}">
+  Reserved
+</span>
+{% else %}
+<span class="macro-badge available {{ size_class }}">
+  Available
+</span>
+{% endif %}
+{% endmacro %}
+
+
+{# ========================================== #}
+{# 5. TOGGLE MACRO (CHECKBOX SETTINGS) #}
+{# ========================================== #}
+{# Gumagawa ng toggle checkbox na may kasamang label at deskripsyon #}
+{% macro toggle(name, label, description, checked) %}
+<label class="macro-toggle-label">
+  <input type="checkbox" name="{{ name }}" value="1" {% if checked %}checked{% endif %} class="macro-toggle-input" />
+
+  <span>
+    <span class="macro-toggle-title">{{ label }}</span>
+    <span class="macro-toggle-desc">{{ description }}</span>
+  </span>
+</label>
+{% endmacro %}
+
+
+{# ========================================== #}
+{# 6. ARTWORK CARD MACRO (HIGH-END GALLERY CARD) #}
+{# ========================================== #}
+{# Premium card layout para sa mga painting sa gallery at search pages #}
+{% macro artwork_card(painting) %}
+<article class="art-card">
+  <a href="{{ url_for('artwork_detail', artwork_id=painting.id) }}"
+    class="block h-full flex flex-col text-decoration-none">
+
+    {# Canvas Image Wrapper na may micro-zoom #}
+    <div class="art-card-canvas-wrapper aspect-[4/5]">
+      {{ canvas(painting, 'w-full h-full object-cover') }}
+    </div>
+
+    {# Card Details Body #}
+    <div class="art-card-body">
+      <div class="flex items-start justify-between gap-2">
+        <h3 class="art-card-title truncate">
+          {{ painting.title }}
+        </h3>
+        {{ status_badge(painting) }}
+      </div>
+
+      <p class="art-card-artist truncate">
+        {{ painting.artist_name if painting.artist_name else (painting.artist.name if painting.artist else '') }}
+      </p>
+
+      <div class="art-card-footer">
+        <span class="art-card-price">
+          {{ painting.price_label }}
+        </span>
+        <span class="text-xs text-neutral-500 font-medium">
+          {{ painting.year if painting.year else '' }}
+        </span>
+      </div>
+    </div>
+
+  </a>
+</article>
+{% endmacro %}

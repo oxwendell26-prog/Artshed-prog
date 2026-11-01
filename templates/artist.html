@@ -1,0 +1,214 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa base.html #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/artist.css') }}">
+{% endblock %}
+
+{# Inaangkat ang macros para sa status badge, canvas, at avatar #}
+{% from "macros.html" import status_badge, canvas, avatar %}
+
+{# Pagtatakda ng pamagat ng pahina gamit ang pangalan ng artist #}
+{% block title %}{{ artist.name }} | Kidapawan City Visual Artists{% endblock %}
+
+{# ========================================== #}
+{# 2. ARTIST PROFILE HEADER SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="artist-header-section">
+  <div class="artist-header-container">
+
+    {# Link pabalik sa listahan ng lahat ng artists #}
+    <a href="{{ url_for('artists') }}" class="artist-back-link">
+      Back to all artists
+    </a>
+
+    {# Profile Avatar, Pangalan, Art Focus, at Action Buttons #}
+    <div class="artist-profile-flex">
+      {{ avatar(artist, 'h-28 w-28 sm:h-36 sm:w-36', 'text-4xl') }}
+
+      <div class="artist-profile-info">
+        <h1 class="artist-profile-name">
+          {{ artist.name }}
+        </h1>
+
+        {% if artist.art_style %}
+        <p class="artist-profile-style">{{ artist.art_style }}</p>
+        {% endif %}
+
+        {% if artist.age %}
+        <p class="artist-profile-meta">Age: {{ artist.age }}</p>
+        {% endif %}
+
+        {% if artist.address %}
+        <p class="artist-profile-meta">Location: {{ artist.address }}</p>
+        {% endif %}
+
+        {% if artist.medium %}
+        <p class="artist-profile-meta">Medium: {{ artist.medium }}</p>
+        {% endif %}
+
+        {% if artist.bio %}
+        <p class="artist-profile-bio-snippet">{{ artist.bio }}</p>
+        {% endif %}
+
+        {# Iba'ibang button depende kung sino ang naka-log in #}
+        {% if current_user.is_authenticated and current_user.id == artist.id %}
+        <a href="{{ url_for('profile') }}" class="artist-action-link-edit">
+          Edit your profile
+        </a>
+
+        {% elif current_user.is_authenticated and current_user.account_type == 'client' %}
+        <a href="{{ url_for('artist_message', artist_id=artist.id) }}" class="artist-action-btn-brass">
+          Message this artist
+        </a>
+
+        {% else %}
+        <a href="{{ url_for('client_register', next=url_for('artist_message', artist_id=artist.id)) }}"
+          class="artist-action-btn-brass">
+          Create a client account to message
+        </a>
+        {% endif %}
+
+      </div>
+    </div>
+
+
+    {# ========================================== #}
+    {# 3. ABOUT THE ARTIST AT STATS SIDEBAR #}
+    {# ========================================== #}
+    <div class="artist-about-grid">
+
+      {# Seksiyon ng Bio o Tungkol sa Artist #}
+      <div>
+        <h2 class="artist-section-heading">About the artist</h2>
+
+        {% if artist.bio %}
+        <p class="artist-about-text">
+          {{ artist.bio }}
+        </p>
+        {% else %}
+        <p class="artist-about-empty">
+          {{ artist.name }} hasn’t added a bio yet.
+        </p>
+        {% endif %}
+      </div>
+
+      {# Kahon ng Istatistika (Artworks count, Available, Experience, Member since) #}
+      <dl class="artist-stats-dl">
+        <div>
+          <dt class="artist-stat-dt">Artworks</dt>
+          <dd class="artist-stat-dd">{{ works|length }}</dd>
+        </div>
+
+        <div>
+          <dt class="artist-stat-dt">Available</dt>
+          <dd class="artist-stat-dd">
+            {{ works|selectattr('available')|list|length }}
+          </dd>
+        </div>
+
+        {% if artist.experience %}
+        <div class="artist-stat-span-2">
+          <dt class="artist-stat-dt">Experience</dt>
+          <dd class="artist-stat-text-white">{{ artist.experience }}</dd>
+        </div>
+        {% endif %}
+
+        {% if artist.created_at and artist.show_member_since %}
+        <div class="artist-stat-span-2">
+          <dt class="artist-stat-dt">Member since</dt>
+          <dd class="artist-stat-text-white">{{ artist.created_at.strftime('%B %Y') }}</dd>
+        </div>
+        {% endif %}
+      </dl>
+
+    </div>
+  </div>
+</section>
+
+
+{# ========================================== #}
+{# 4. ARTWORKS GALLERY SECTION #}
+{# ========================================== #}
+<section class="artist-gallery-section">
+  <h2 class="artist-section-heading" style="font-size: 1.875rem;">
+    Artworks by {{ artist.name }}
+  </h2>
+
+  {% if works %}
+  <ul class="artist-gallery-grid">
+    {% for p in works %}
+    <li>
+      <article class="artist-artwork-card">
+
+        {# Preview canvas ng painting #}
+        {{ canvas(p, 'aspect-[4/5]') }}
+
+        <div class="artist-artwork-body">
+          <div class="artist-artwork-header-row">
+            <h3 class="artist-artwork-title">
+              <a href="{{ url_for('artwork_detail', artwork_id=p.id) }}" class="artist-artwork-link-overlay">
+                {{ p.title }}
+              </a>
+            </h3>
+
+            {{ status_badge(p) }}
+          </div>
+
+          <p class="artist-artwork-year">{{ p.year }}</p>
+
+          {% if p.size %}
+          <p class="artist-artwork-size">Oil on canvas, {{ p.size }}</p>
+          {% endif %}
+
+          {% if p.available %}
+          <p class="artist-artwork-price">{{ p.price_label }}</p>
+          {% endif %}
+
+          {% if p.note %}
+          <p class="artist-artwork-note">
+            {{ p.note }}
+          </p>
+          {% endif %}
+
+          {# Checkout o Buy buttons para sa mga kliyente #}
+          {% if p.can_buy and not (current_user.is_authenticated and current_user.id == p.artist_id) %}
+          {% if current_user.is_authenticated and current_user.account_type == 'client' %}
+          <a href="{{ url_for('checkout', artwork_id=p.id) }}" class="artist-artwork-buy-btn">
+            Checkout
+          </a>
+          {% else %}
+          <a href="{{ url_for('client_register', next=url_for('checkout', artwork_id=p.id)) }}"
+            class="artist-artwork-buy-btn">
+            Create client account to buy
+          </a>
+          {% endif %}
+          {% endif %}
+
+        </div>
+      </article>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {# Mensahe kung wala pang na-post na sining ang artist #}
+  {% else %}
+  <p class="artist-gallery-empty">
+    {{ artist.name }} hasn’t posted any artworks yet.
+  </p>
+  {% endif %}
+
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/artist.js') }}"></script>
+{% endblock %}

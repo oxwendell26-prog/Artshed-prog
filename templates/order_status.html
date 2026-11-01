@@ -1,0 +1,210 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{% extends "base.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/order_status.css') }}">
+{% endblock %}
+
+{% from "macros.html" import canvas %}
+
+{% block title %}
+Order #{{ order.id }} | Kidapawan City Visual Artists
+{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="order-status-section">
+
+  {# Header Status #}
+  <h1 class="order-status-title">
+    {% if order.status == 'pending' %}
+    Order Placed - Awaiting Payment to Admin
+    {% elif order.status == 'payment_uploaded' %}
+    Payment Uploaded - Waiting for Admin Verification
+    {% elif order.status == 'in_escrow' %}
+    Payment Verified - Held by Admin
+    {% elif order.status == 'completed' %}
+    Order Completed
+    {% else %}
+    Order Declined / Cancelled
+    {% endif %}
+  </h1>
+
+  {# Message Banner #}
+  <p class="order-status-banner">
+    {% if order.status == 'pending' %}
+    Pay the official platform account shown at checkout and upload your receipt below. The funds are not verified or recorded as held until an admin confirms the payment.
+    {% elif order.status == 'payment_uploaded' %}
+    Your receipt has been submitted. An admin must manually verify the payment before the artist prepares the artwork.
+    {% elif order.status == 'in_escrow' %}
+    An admin verified the payment and recorded it as held by the platform. {{ order.artist.name }} will prepare and ship your artwork.
+    {% elif order.status == 'completed' %}
+    You confirmed receipt. The artist's net payout (97% of the order price) is recorded and awaiting admin release{% if order.payout_released %}; the admin marked it released on {{ order.payout_released_at|ph_time }}{% endif %}. Thank you for supporting local Kidapawan artists.
+    {% else %}
+    This order has been cancelled.
+    {% endif %}
+  </p>
+
+
+  {# ========================================== #}
+  {# 3. ADMIN-VERIFIED PAYMENT & CLIENT CONFIRMATION #}
+  {# ========================================== #}
+
+  {# Step A: Upload Proof of Payment (Kapag Pending pa) #}
+  {% if order.status in ('pending', 'payment_uploaded') and current_user.id == order.buyer_id %}
+  <div class="mb-8 rounded-xl bg-neutral-900 p-6 border border-white/10">
+    <h3 class="text-lg font-semibold text-white mb-2">Upload Payment Receipt</h3>
+
+    <!-- Official platform account details -->
+    <div class="mb-4 rounded-lg bg-neutral-950 p-4 border border-white/5 text-xs text-neutral-300">
+      <p class="font-semibold text-white mb-1">Pay the official platform account shown at checkout.</p>
+      <p class="text-neutral-400 mt-1">Total Due: <strong class="text-emerald-400">{{ order.price_label
+          }}</strong></p>
+      <p class="text-amber-300 mt-2">An admin will verify the payment manually. Do not send payment to the artist's personal account.</p>
+    </div>
+
+    <form action="{{ url_for('upload_payment_proof', token=order.token) }}" method="POST" enctype="multipart/form-data"
+      class="flex flex-col sm:flex-row gap-3">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="file" name="payment_proof" id="payment_proof" accept="image/*" required
+        class="block w-full text-xs text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-neutral-800 file:text-white hover:file:bg-neutral-700">
+      <button type="submit"
+        class="px-5 py-2 rounded-lg bg-white text-neutral-950 font-semibold text-xs hover:bg-neutral-200 transition shrink-0">
+        {% if order.status == 'payment_uploaded' %}Replace Receipt{% else %}Submit Receipt{% endif %}
+      </button>
+    </form>
+  </div>
+  {% endif %}
+
+  {# Step B: Confirm Received (Kapag nakuha na ang painting) #}
+  {% if order.status == 'in_escrow' and order.funds_received and current_user.id == order.buyer_id %}
+  <div class="mb-8 rounded-xl bg-neutral-900/90 p-6 border border-white/10 text-center">
+    <h3 class="text-lg font-semibold text-white mb-2">Have you received the artwork?</h3>
+    <p class="text-xs text-neutral-400 mb-5 max-w-md mx-auto">
+      Confirm only after you have received and inspected the artwork. This marks the order as complete and records the artist's payout (price less the 3% platform fee) for admin release.
+    </p>
+
+    <form action="{{ url_for('client_confirm_received', token=order.token) }}" method="POST" class="mb-4">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label class="mb-4 flex items-center justify-center gap-2 text-left text-xs text-neutral-300">
+        <input type="checkbox" name="confirm_received" value="yes" required>
+        I confirm that I have received and inspected this artwork.
+      </label>
+      <button type="submit"
+        class="w-full sm:w-auto px-6 py-3 rounded-full bg-emerald-500 text-neutral-950 font-bold text-sm hover:bg-emerald-400 transition shadow-lg">
+        ✓ Confirm Received
+      </button>
+    </form>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 border-t border-white/10 pt-4 mt-4">
+      <a href="{{ url_for('artist_message', artist_id=order.artist_id) }}"
+        class="w-full sm:w-auto px-4 py-2 rounded-lg bg-neutral-800 text-neutral-200 text-xs font-medium hover:bg-neutral-700 transition">
+        🎨 Chat with Artist ({{ order.artist.name }})
+      </a>
+      {% if admin_user_id %}
+      <a href="{{ url_for('artist_message', artist_id=admin_user_id) }}"
+        class="w-full sm:w-auto px-4 py-2 rounded-lg bg-sky-500/20 text-sky-300 text-xs font-semibold border border-sky-500/40 hover:bg-sky-500/30 transition">
+        🛡️ Contact Admin Support
+      </a>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+
+  {# ========================================== #}
+  {# 4. ARTWORK PREVIEW & DETAILS CARD #}
+  {# ========================================== #}
+  <div class="order-artwork-card">
+    {% if order.artwork %}
+    <div class="order-canvas-wrap">
+      {{ canvas(order.artwork, 'aspect-[4/5]') }}
+    </div>
+    {% endif %}
+
+    <div class="order-artwork-info-wrap">
+      <p class="order-artwork-title">{{ order.artwork_title }}</p>
+
+      <p class="order-artist-link" style="color: #d4d4d4;">
+        by
+        {% if order.artwork %}
+        <a href="{{ url_for('artist_detail', artist_id=order.artist_id) }}" class="order-artist-link">
+          {{ order.artist.name }}
+        </a>
+        {% else %}
+        {{ order.artist.name }}
+        {% endif %}
+      </p>
+
+      <p class="order-artwork-price">
+        {{ order.price_label }}
+      </p>
+    </div>
+  </div>
+
+
+  {# ========================================== #}
+  {# 5. ORDER DETAILS & BREAKDOWN #}
+  {# ========================================== #}
+  <dl class="order-details-dl">
+    <dt class="order-dt-label">Order Number</dt>
+    <dd class="order-dd-value font-bold text-white text-base">#{{ order.id }}</dd>
+
+    <dt class="order-dt-label">Order Date</dt>
+    <dd class="order-dd-value">{{ order.created_at.strftime('%B %d, %Y') }}</dd>
+
+    <dt class="order-dt-label">Price</dt>
+    <dd class="order-dd-value">{{ order.price_label }}</dd>
+
+    {% if current_user.is_admin or current_user.id == order.artist_id %}
+    <dt class="order-dt-label">Platform Commission (3%)</dt>
+    <dd class="order-dd-value text-amber-400">{{ order.commission_label }}</dd>
+
+    <dt class="order-dt-label">Artist Payout (97%)</dt>
+    <dd class="order-dd-value text-emerald-400">{{ order.payout_label }}</dd>
+
+    <dt class="order-dt-label">Payout Status</dt>
+    <dd class="order-dd-value">
+      {% if order.payout_released %}
+      <span class="text-emerald-400 font-semibold">✓ Marked as released by admin on {{ order.payout_released_at|ph_time }}</span>
+      {% elif order.payout_recorded_at %}
+      <span class="text-amber-400 font-semibold">Recorded; awaiting admin release</span>
+      {% elif order.funds_received %}
+      <span class="text-blue-300 font-semibold">Held by admin; payout will be recorded after you confirm receipt</span>
+      {% else %}
+      <span class="text-neutral-400 font-semibold">Payment has not been verified by an admin</span>
+      {% endif %}
+    </dd>
+    {% endif %}
+
+    <dt class="order-dt-label">Buyer Name</dt>
+    <dd class="order-dd-value">{{ order.buyer_name }}</dd>
+
+    <dt class="order-dt-label">Email</dt>
+    <dd class="order-dd-value">{{ order.buyer_email }}</dd>
+
+    <dt class="order-dt-label">Telepono</dt>
+    <dd class="order-dd-value">{{ order.buyer_phone }}</dd>
+
+    {% if order.note %}
+    <dt class="order-dt-label">Message</dt>
+    <dd class="order-dd-value">{{ order.note }}</dd>
+    {% endif %}
+  </dl>
+
+  <a href="{{ url_for('artworks') }}" class="order-browse-link mt-6 block">
+    Browse More Artworks
+  </a>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/order_status.js') }}"></script>
+{% endblock %}

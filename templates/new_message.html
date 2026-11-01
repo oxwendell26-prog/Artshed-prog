@@ -1,0 +1,112 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{# Iminamanahin ang pangkalahatang anyo mula sa base.html at inaangkat ang canvas macro #}
+{% extends "base.html" %}
+
+{# Pag-link sa ating bagong hiwalay na CSS file #}
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new_message.css') }}">
+{% endblock %}
+
+{% from "macros.html" import canvas %}
+
+{# Pagtatakda ng pamagat ng pahina sa tab ng browser #}
+{% block title %}
+Message {{ artwork.artist_name }} | Kidapawan City Visual Artists
+{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+<section class="new-msg-art-section">
+
+  {# Link pabalik sa pahina ng detalyadong impormasyon ng painting #}
+  <a href="{{ url_for('artwork_detail', artwork_id=artwork.id) }}" class="new-msg-art-back-link">
+    Back to the painting
+  </a>
+
+  {# Header at Deskripsyon ng Pahina #}
+  <h1 class="new-msg-art-title">
+    Message the artist
+  </h1>
+
+  <p class="new-msg-art-subtitle">
+    Ask {{ artwork.artist_name }} about “{{ artwork.title }}”. Your conversation will be saved to your client account.
+  </p>
+
+
+  {# ========================================== #}
+  {# 3. GRID LAYOUT: ARTWORK PREVIEW & FORM #}
+  {# ========================================== #}
+  <div class="new-msg-art-grid">
+
+    {# ------------------------------------------ #}
+    {# A. Sidebar: Artwork Preview Card #}
+    {# ------------------------------------------ #}
+    {# Kahon sa kaliwa na nagpapakita ng larawan at detalye ng artwork na itinatanong #}
+    <aside class="new-msg-art-sidebar">
+
+      {# Display ng sining gamit ang canvas macro #}
+      {{ canvas(artwork, 'aspect-[4/3]') }}
+
+      <p class="new-msg-art-name">{{ artwork.title }}</p>
+
+      <p class="new-msg-art-artist-info">
+        {{ artwork.artist_name }}, {{ artwork.year }}
+      </p>
+
+    </aside>
+
+
+    {# ------------------------------------------ #}
+    {# B. New Message Form #}
+    {# ------------------------------------------ #}
+    {# Form para sa pagpapadala ng bagong mensahe sa artist #}
+    <form method="post" class="new-msg-art-form">
+      {# CSRF Token para sa seguridad ng pormularyo #}
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      {# Impormasyon sa kasalukuyang user na nagpapadala ng mensahe #}
+      <p class="new-msg-art-user-banner">
+        Sending as {{ current_user.name }} ({{ current_user.email }}). Your reply will be saved in Messages.
+      </p>
+
+      {# Textarea Input para sa Mensahe #}
+      <div class="new-msg-art-field-group">
+        <label for="message" class="new-msg-art-label">
+          Message
+        </label>
+
+        <textarea id="message" name="message" rows="5" maxlength="2000" required
+          class="new-msg-art-textarea {{ 'has-error' if errors.get('message') else '' }}">{{ form.get('message', '') }}</textarea>
+
+        {# Display ng Error Message kapag may mali sa pag-input #}
+        {% if errors.get('message') %}
+        <p class="new-msg-art-error-text">{{ errors.message }}</p>
+        {% endif %}
+      </div>
+
+      {# Paalala sa user tungkol sa lokasyon ng usapan #}
+      <p class="new-msg-art-help-text">
+        You can return to this conversation any time from Messages.
+      </p>
+
+      {# Submit Button para sa Pagpapadala #}
+      <button type="submit" class="new-msg-art-submit-btn">
+        Send message
+      </button>
+
+    </form>
+
+  </div>
+</section>
+{% endblock %}
+
+{# Pag-link sa ating bagong hiwalay na JavaScript file #}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/new_message.js') }}"></script>
+{% endblock %}
