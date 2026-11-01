@@ -38,7 +38,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/macros.css') }}?v=3">
 
   {# Pag-link sa Hiwalay na Global CSS File (Gamit ang v=5 para ma-refresh ang cache) #}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}?v=6">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}?v=7">
 
   {# Karagdagang head block para sa iba pang pahina #}
   {% block head %}{% endblock %}
@@ -248,13 +248,21 @@
 
 
       {# C. Main Navigation Links (na may HOVER MEGA DROPDOWN) at Search Bar #}
-      <div
-        class="mt-3 flex flex-col gap-3 border-t border-white/10 pt-3 sm:flex-row sm:items-center sm:justify-between">
-        <nav aria-label="Browse" class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-medium">
+      <div class="primary-navigation-shell mt-3 border-t border-white/10 pt-3">
+        <div class="primary-navigation-top">
           <a href="{{ url_for('home') }}" class="nav-btn-silver">
             Home
           </a>
+          <button id="primary-navigation-toggle" type="button" aria-expanded="false"
+            aria-controls="primary-navigation-panel" aria-label="Open navigation menu"
+            class="primary-navigation-toggle">
+            <span aria-hidden="true">☰</span>
+            <span class="primary-navigation-toggle-label">Menu</span>
+          </button>
+        </div>
 
+        <div id="primary-navigation-panel" class="primary-navigation-panel">
+          <nav aria-label="Browse" class="primary-navigation-links flex flex-wrap items-center gap-x-5 gap-y-2 text-sm font-medium">
           <!-- HOVER MEGA DROPDOWN FOR ARTWORKS -->
           <div class="group relative py-1">
             <a href="{{ url_for('artworks') }}" class="nav-btn-silver flex items-center gap-1.5 select-none">
@@ -331,27 +339,28 @@
           <a href="{{ url_for('track_order') }}" class="nav-btn-silver">
             Track order
           </a>
-        </nav>
+          </nav>
 
-        {# Search Bar Form #}
-        <form action="{{ url_for('search') }}" method="get" role="search" class="w-full sm:w-64 sm:shrink-0">
-          <label for="site-search" class="sr-only">
-            Search paintings and artists
-          </label>
-          <div class="relative">
-            <input id="site-search" name="q" type="search" maxlength="100"
-              value="{{ request.args.get('q', '') if request.endpoint == 'search' else '' }}"
-              placeholder="Paintings or artists" class="search-input-silver" />
-            <button type="submit" aria-label="Search"
-              class="absolute inset-y-0 right-0 inline-flex w-9 items-center justify-center text-neutral-400 hover:text-white">
-              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
-                aria-hidden="true">
-                <circle cx="10.8" cy="10.8" r="6.8" />
-                <path stroke-linecap="round" d="m16 16 5 5" />
-              </svg>
-            </button>
-          </div>
-        </form>
+          {# Search Bar Form #}
+          <form action="{{ url_for('search') }}" method="get" role="search" class="primary-navigation-search w-full sm:w-64 sm:shrink-0">
+            <label for="site-search" class="sr-only">
+              Search paintings and artists
+            </label>
+            <div class="relative">
+              <input id="site-search" name="q" type="search" maxlength="100"
+                value="{{ request.args.get('q', '') if request.endpoint == 'search' else '' }}"
+                placeholder="Paintings or artists" class="search-input-silver" />
+              <button type="submit" aria-label="Search"
+                class="absolute inset-y-0 right-0 inline-flex w-9 items-center justify-center text-neutral-400 hover:text-white">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"
+                  aria-hidden="true">
+                  <circle cx="10.8" cy="10.8" r="6.8" />
+                  <path stroke-linecap="round" d="m16 16 5 5" />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
 
       </div>
 
@@ -406,7 +415,7 @@
   {# ========================================== #}
   {# 8. JAVASCRIPT SCRIPTS AT INTERACTIVITY #}
   {# ========================================== #}
-  <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/base.js') }}?v=2"></script>
   {% block scripts %}{% endblock %}
 
 </body>
