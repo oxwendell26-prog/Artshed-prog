@@ -27,7 +27,7 @@ app.config.update(
     # Supabase PostgreSQL Direct Connection String (Port 5432 + sslmode=require)
     SQLALCHEMY_DATABASE_URI=os.environ.get(
         "DATABASE_URL",
-        "postgresql://postgres:wendellartshed26@db.lhqeemlgrizhalhdhojd.supabase.co:5432/postgres?sslmode=require"
+        "postgresql://postgres.lhqeemlgrizhalhdhojd:wendellartshed26@aws-0-ap-south-1.pooler.supabase.com:5432/postgres"
     ),
     SQLALCHEMY_ENGINE_OPTIONS={
         "pool_pre_ping": True,
