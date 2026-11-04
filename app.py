@@ -24,10 +24,10 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignat
 app = Flask(__name__)
 app.config.update(
     SECRET_KEY=os.environ.get("SECRET_KEY", "dev-only-change-me"),
-    # Supabase PostgreSQL Connection String (Transaction Pooler / Direct connection)
+    # Supabase PostgreSQL Direct Connection String (Port 5432 + sslmode=require)
     SQLALCHEMY_DATABASE_URI=os.environ.get(
         "DATABASE_URL",
-        "postgresql://postgres.lhqeemlgrizhalhdhojd:wendellartshed26@aws-0-ap-south-1.pooler.supabase.com:6543/postgres"
+        "postgresql://postgres:wendellartshed26@db.lhqeemlgrizhalhdhojd.supabase.co:5432/postgres?sslmode=require"
     ),
     SQLALCHEMY_ENGINE_OPTIONS={
         "pool_pre_ping": True,
@@ -308,7 +308,6 @@ def load_user(user_id):
     return db.session.get(Artist, int(user_id))
 
 
-# Helper function para makuha ang mga column sa PostgreSQL gamit ang information_schema
 def get_table_columns(table_name):
     result = db.session.execute(db.text(
         "SELECT column_name FROM information_schema.columns WHERE table_name = :tname"
@@ -535,7 +534,6 @@ with app.app_context():
     ensure_bootstrap_admin()
 
 
-# Helper functions para sa Password Reset Tokens
 def get_serializer():
     return URLSafeTimedSerializer(app.config["SECRET_KEY"])
 
