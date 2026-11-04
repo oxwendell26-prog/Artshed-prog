@@ -1,0 +1,204 @@
+{# ========================================== #}
+{# 1. LAYOUT EXTENSION AT MACRO IMPORTS #}
+{# ========================================== #}
+{% extends "base.html" %}
+
+{% block styles %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}?v=2">
+{% endblock %}
+
+{% from "macros.html" import avatar, canvas, status_badge %}
+
+{% block title %}Kidapawan City Visual Artists | ArtHub Gallery{% endblock %}
+
+{# ========================================== #}
+{# 2. MAIN CONTENT SECTION #}
+{# ========================================== #}
+{% block content %}
+
+{# ------------------------------------------ #}
+{# A. HERO SECTION #}
+{# ------------------------------------------ #}
+<section class="hero-section">
+  <div class="hero-container">
+    <p class="hero-tag">
+      Kidapawan City Visual Artists
+    </p>
+
+    <h1 class="hero-title">
+      Discover and collect local masterpieces
+    </h1>
+
+    <p class="hero-subtitle">
+      Explore original paintings, meet talented local artists, and support the vibrant visual arts community in
+      Kidapawan City.
+    </p>
+
+    <div class="hero-cta-group">
+      <a href="{{ url_for('artworks') }}" class="hero-btn-primary">
+        Browse artworks
+      </a>
+
+      <a href="{{ url_for('artists') }}" class="hero-btn-secondary">
+        Meet the artists
+      </a>
+    </div>
+  </div>
+</section>
+
+
+{# ------------------------------------------ #}
+{# B. TOP 5 MOST VIEWED ARTWORKS SECTION #}
+{# ------------------------------------------ #}
+<section class="home-section">
+
+  <div class="home-section-header">
+    <div>
+      <p class="home-section-tag">
+        Most Viewed
+      </p>
+      <h2 class="home-section-title">
+        Featured Artworks
+      </h2>
+    </div>
+
+    <a href="{{ url_for('artworks') }}" class="home-section-link">
+      View all artworks &rarr;
+    </a>
+  </div>
+
+  {% if recent %}
+  <ul class="home-artworks-grid">
+    {% for painting in recent %}
+    <li>
+      <article class="artwork-card">
+        <a href="{{ url_for('artwork_detail', artwork_id=painting.id) }}" class="artwork-card-link">
+          <div class="artwork-card-image-wrap">
+            <div class="artwork-card-image-inner">
+              {{ canvas(painting, 'aspect-[4/5]') }}
+            </div>
+          </div>
+
+          <div class="artwork-card-body">
+            <div class="artwork-card-header-row">
+              <h3 class="artwork-card-title">
+                {{ painting.title }}
+              </h3>
+              {{ status_badge(painting) }}
+            </div>
+
+            <p class="artwork-card-artist">
+              {{ painting.artist.name }}
+            </p>
+
+            <div class="flex items-center justify-between mt-1">
+              <p class="artwork-card-price">
+                {{ painting.price_label }}
+              </p>
+              <span class="text-[10px] text-neutral-400">
+                👁️ {{ painting.views }} views
+              </span>
+            </div>
+          </div>
+        </a>
+      </article>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="artworks-empty-notice" style="margin-top: 2rem;">No featured artworks available right now.</p>
+  {% endif %}
+
+</section>
+
+
+{# ------------------------------------------ #}
+{# C. TOP 5 FEATURED ARTISTS SECTION #}
+{# ------------------------------------------ #}
+<section class="home-section">
+
+  <div class="home-section-header">
+    <div>
+      <p class="home-section-tag">
+        Top Creators
+      </p>
+      <h2 class="home-section-title">
+        Top Featured Artists
+      </h2>
+    </div>
+
+    <a href="{{ url_for('artists') }}" class="home-section-link">
+      View all artists &rarr;
+    </a>
+  </div>
+
+  {% if featured_artists %}
+  <ul class="home-artists-grid">
+    {% for artist in featured_artists %}
+    <li>
+      <a href="{{ url_for('artist_detail', artist_id=artist.id) }}" class="home-artist-card">
+        <div class="home-artist-avatar-wrap">
+          {{ avatar(artist, 'h-16 w-16', 'text-xl') }}
+        </div>
+
+        <span class="home-artist-content" style="min-width: 0; flex: 1;">
+          <span class="home-artist-name">
+            {{ artist.name }}
+          </span>
+
+          <span class="home-artist-focus" style="color: #acb2b5; font-size: 0.75rem;">
+            {{ featured_artist_work_counts[artist.id] }} Obra{{ 's' if featured_artist_work_counts[artist.id] != 1 else '' }}
+          </span>
+
+          <span class="home-artist-link-prompt">
+            View profile &rarr;
+          </span>
+        </span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p class="artists-empty-notice" style="margin-top: 2rem;">No artists featured at the moment.</p>
+  {% endif %}
+
+</section>
+
+
+{# ------------------------------------------ #}
+{# D. COMMUNITY CALLOUT SECTION #}
+{# ------------------------------------------ #}
+<section class="home-section">
+  <div
+    class="home-community-banner transition-all duration-300 hover:-translate-y-1.5 hover:border-[#acb2b5]/40 hover:shadow-[0_12px_35px_rgba(0,0,0,0.6),0_0_25px_rgba(172,178,181,0.15)]">
+    <div style="max-width: 48rem;">
+      <h2 class="home-section-title" style="font-size: 1.875rem;">
+        Join the Kidapawan art community
+      </h2>
+
+      <p class="home-community-text">
+        Are you a local visual artist looking to showcase your paintings, or an art enthusiast wanting to connect
+        directly with creators? Create an account today to share updates, join discussions, and support local
+        masterpiece collections.
+      </p>
+
+      <div class="home-community-actions">
+        <a href="{{ url_for('client_register') }}" class="hero-btn-primary" style="padding: 0.75rem 1.5rem;">
+          Create client account
+        </a>
+
+        <a href="{{ url_for('register') }}" class="hero-btn-secondary" style="padding: 0.75rem 1.5rem;">
+          Apply as an artist
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}
