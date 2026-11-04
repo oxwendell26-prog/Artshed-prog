@@ -29,6 +29,10 @@ app.config.update(
         "DATABASE_URL",
         "postgresql://postgres.lhqeemlgrizhalhdhojd:wendellartshed26@aws-0-ap-south-1.pooler.supabase.com:6543/postgres"
     ),
+    SQLALCHEMY_ENGINE_OPTIONS={
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+    },
     MAX_CONTENT_LENGTH=5 * 1024 * 1024,
     UPLOAD_FOLDER=os.path.join(app.static_folder, "uploads"),
     DEFAULT_COMMISSION_RATE=0.03  # 3% platform commission
