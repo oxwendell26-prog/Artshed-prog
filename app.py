@@ -16,7 +16,7 @@ from flask_login import (LoginManager, UserMixin, current_user, login_required,
                          login_user, logout_user)
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-from sqlalchemy import or_
+from sqlalchemy import literal, or_
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash, generate_password_hash
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
@@ -551,12 +551,14 @@ def verify_reset_token(token, expiration=3600):
 @app.context_processor
 def inject_counts():
     if current_user.is_authenticated:
-        return {
-            "pending_orders": Order.query.filter_by(
-                artist_id=current_user.id, status="pending").count(),
-            "unread_notifications": Notification.query.filter_by(
-                artist_id=current_user.id, is_read=False).count(),
-            "unread_messages": ChatMessage.query.join(Conversation).filter(
+        counts = db.session.query(
+            db.session.query(db.func.count(Order.id)).filter_by(
+                artist_id=current_user.id, status="pending"
+            ).scalar_subquery(),
+            db.session.query(db.func.count(Notification.id)).filter_by(
+                artist_id=current_user.id, is_read=False
+            ).scalar_subquery(),
+            db.session.query(db.func.count(ChatMessage.id)).join(Conversation).filter(
                 or_(
                     db.and_(
                         Conversation.artist_id == current_user.id,
@@ -568,27 +570,55 @@ def inject_counts():
                     ),
                 ),
                 ChatMessage.is_read.is_(False),
-            ).count(),
+            ).scalar_subquery(),
+        ).one()
+        return {
+            "pending_orders": counts[0],
+            "unread_notifications": counts[1],
+            "unread_messages": counts[2],
         }
     return {"pending_orders": 0, "unread_notifications": 0, "unread_messages": 0}
 
 
 @app.context_processor
 def inject_dynamic_categories():
-    styles = db.session.query(Artwork.style).join(Artist).filter(
-        Artwork.hidden.is_(False), Artist.is_approved.is_(True), Artist.suspended.is_(False)
-    ).distinct().all()
-    subjects = db.session.query(Artwork.subject).join(Artist).filter(
-        Artwork.hidden.is_(False), Artist.is_approved.is_(True), Artist.suspended.is_(False)
-    ).distinct().all()
-    mediums = db.session.query(Artwork.medium).join(Artist).filter(
-        Artwork.hidden.is_(False), Artist.is_approved.is_(True), Artist.suspended.is_(False)
-    ).distinct().all()
+    visible_artwork_filters = (
+        Artwork.hidden.is_(False),
+        Artist.is_approved.is_(True),
+        Artist.suspended.is_(False),
+    )
+    categories = (
+        db.session.query(
+            literal("style").label("category"), Artwork.style.label("value")
+        )
+        .join(Artist)
+        .filter(*visible_artwork_filters, Artwork.style.isnot(None))
+        .distinct()
+        .union(
+            db.session.query(
+                literal("subject").label("category"), Artwork.subject.label("value")
+            )
+            .join(Artist)
+            .filter(*visible_artwork_filters, Artwork.subject.isnot(None))
+            .distinct(),
+            db.session.query(
+                literal("medium").label("category"), Artwork.medium.label("value")
+            )
+            .join(Artist)
+            .filter(*visible_artwork_filters, Artwork.medium.isnot(None))
+            .distinct(),
+        )
+        .all()
+    )
+    values_by_category = {"style": set(), "subject": set(), "medium": set()}
+    for category, value in categories:
+        if value:
+            values_by_category[category].add(value.title())
 
     return {
-        "dynamic_styles": sorted([s[0].title() for s in styles if s[0]]),
-        "dynamic_subjects": sorted([sub[0].title() for sub in subjects if sub[0]]),
-        "dynamic_mediums": sorted([m[0].title() for m in mediums if m[0]])
+        "dynamic_styles": sorted(values_by_category["style"]),
+        "dynamic_subjects": sorted(values_by_category["subject"]),
+        "dynamic_mediums": sorted(values_by_category["medium"]),
     }
 
 
@@ -695,33 +725,57 @@ def home():
         account_type="artist", is_approved=True, suspended=False, is_admin=False
     ).all()
     
-    artist_scores = []
-    for a in artists:
-        if not a.show_in_directory:
-            continue
-        sales_total = db.session.query(db.func.coalesce(db.func.sum(Order.price), 0))\
-            .filter(Order.artist_id == a.id, Order.status == "completed").scalar()
-        works_count = len(a.public_works)
-        
-        artist_scores.append({
-            "artist": a,
-            "sales": sales_total,
-            "works": works_count
-        })
-    
+    sales_by_artist = (
+        db.session.query(
+            Order.artist_id.label("artist_id"),
+            db.func.sum(Order.price).label("sales"),
+        )
+        .filter(Order.status == "completed")
+        .group_by(Order.artist_id)
+        .subquery()
+    )
+    works_by_artist = (
+        db.session.query(
+            Artwork.artist_id.label("artist_id"),
+            db.func.count(Artwork.id).label("works_count"),
+        )
+        .filter(Artwork.hidden.is_(False))
+        .group_by(Artwork.artist_id)
+        .subquery()
+    )
+    artist_scores = db.session.query(
+        Artist,
+        db.func.coalesce(sales_by_artist.c.sales, 0).label("sales"),
+        db.func.coalesce(works_by_artist.c.works_count, 0).label("works_count"),
+    ).outerjoin(
+        sales_by_artist, sales_by_artist.c.artist_id == Artist.id
+    ).outerjoin(
+        works_by_artist, works_by_artist.c.artist_id == Artist.id
+    ).filter(
+        Artist.account_type == "artist",
+        Artist.is_approved.is_(True),
+        Artist.suspended.is_(False),
+        Artist.is_admin.is_(False),
+        Artist.show_in_directory.is_(True),
+    ).all()
+
     top_artists_sorted = sorted(
-        artist_scores, 
-        key=lambda x: (x["sales"], x["works"]), 
+        artist_scores,
+        key=lambda row: (row.sales, row.works_count),
         reverse=True
     )[:5]
-    
-    featured_artists = [item["artist"] for item in top_artists_sorted]
+
+    featured_artists = [row.Artist for row in top_artists_sorted]
+    featured_artist_work_counts = {
+        row.Artist.id: row.works_count for row in top_artists_sorted
+    }
 
     return render_template(
         "index.html",
         hero=featured_paintings[0] if featured_paintings else None,
         recent=featured_paintings,
         featured_artists=featured_artists,
+        featured_artist_work_counts=featured_artist_work_counts,
         total_works=visible_artworks().count(),
         total_artists=len(artists),
     )
